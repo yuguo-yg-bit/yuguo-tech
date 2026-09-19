@@ -321,8 +321,8 @@
     border-color:rgba(77,141,255,.55);
     box-shadow:0 8px 20px rgba(0,0,0,.3);
   }
-  .lang-chip .dot{
-    width:10px;height:10px;border-radius:3px;flex:none;
+  .lang-chip img{
+    width:20px;height:20px;flex:none;
   }
 
   /* 平台画板 */
@@ -346,6 +346,8 @@
     width:40px;height:40px;margin:0 auto 12px;
     color:var(--accent);
   }
+  .plat-cell .plat-icon img{width:40px;height:40px;display:block}
+  .plat-cell .plat-icon svg{width:40px;height:40px;display:block}
   .plat-cell .plat-name{
     font-size:13.5px;font-weight:600;color:var(--text);
   }
@@ -547,9 +549,9 @@
     <nav class="nav-links">
       <a href="#services">承接服务</a>
       <a href="#process">合作流程</a>
-      <a href="#inquiry">提交需求</a>
+      <a href="#honors">荣誉资质</a>
     </nav>
-    <a class="btn btn-primary" href="#inquiry">提交开发需求</a>
+    <a class="btn btn-primary" href="login.html">登录</a>
   </div>
 </header>
 
@@ -569,7 +571,7 @@
       提交你的需求，我们把每一行代码敲好。
     </p>
     <div class="hero-cta">
-      <a class="btn btn-primary" href="#inquiry">提交开发需求</a>
+      <a class="btn btn-primary" href="login.html">提交开发者需求</a>
       <a class="btn btn-ghost" href="#services">看看能做什么</a>
     </div>
     <div class="hero-note">$ yuguo --start project<span class="cursor"></span></div>
@@ -684,17 +686,17 @@
           <span class="art-count">11 languages</span>
         </div>
         <div class="lang-grid">
-          <div class="lang-chip"><span class="dot" style="background:#F7DF1E"></span>JavaScript</div>
-          <div class="lang-chip"><span class="dot" style="background:#3776AB"></span>Python</div>
-          <div class="lang-chip"><span class="dot" style="background:#ED8B00"></span>Java</div>
-          <div class="lang-chip"><span class="dot" style="background:#3178C6"></span>TypeScript</div>
-          <div class="lang-chip"><span class="dot" style="background:#00599C"></span>C++</div>
-          <div class="lang-chip"><span class="dot" style="background:#68217A"></span>C#</div>
-          <div class="lang-chip"><span class="dot" style="background:#00ADD8"></span>Go</div>
-          <div class="lang-chip"><span class="dot" style="background:#777BB4"></span>PHP</div>
-          <div class="lang-chip"><span class="dot" style="background:#CC342D"></span>Ruby</div>
-          <div class="lang-chip"><span class="dot" style="background:#F05138"></span>Swift</div>
-          <div class="lang-chip"><span class="dot" style="background:#7F52FF"></span>Kotlin</div>
+          <div class="lang-chip"><img src="https://cdn.simpleicons.org/javascript/F7DF1E" alt="JavaScript" loading="lazy">JavaScript</div>
+          <div class="lang-chip"><img src="https://cdn.simpleicons.org/python/3776AB" alt="Python" loading="lazy">Python</div>
+          <div class="lang-chip"><img src="https://cdn.simpleicons.org/openjdk/ED8B00" alt="Java" loading="lazy">Java</div>
+          <div class="lang-chip"><img src="https://cdn.simpleicons.org/typescript/3178C6" alt="TypeScript" loading="lazy">TypeScript</div>
+          <div class="lang-chip"><img src="https://cdn.simpleicons.org/cplusplus/00599C" alt="C++" loading="lazy">C++</div>
+          <div class="lang-chip"><img src="https://cdn.simpleicons.org/dotnet/512BD4" alt="C#" loading="lazy">C#</div>
+          <div class="lang-chip"><img src="https://cdn.simpleicons.org/go/00ADD8" alt="Go" loading="lazy">Go</div>
+          <div class="lang-chip"><img src="https://cdn.simpleicons.org/php/777BB4" alt="PHP" loading="lazy">PHP</div>
+          <div class="lang-chip"><img src="https://cdn.simpleicons.org/ruby/CC342D" alt="Ruby" loading="lazy">Ruby</div>
+          <div class="lang-chip"><img src="https://cdn.simpleicons.org/swift/F05138" alt="Swift" loading="lazy">Swift</div>
+          <div class="lang-chip"><img src="https://cdn.simpleicons.org/kotlin/7F52FF" alt="Kotlin" loading="lazy">Kotlin</div>
         </div>
       </div>
     </div>
@@ -738,27 +740,39 @@
         </div>
         <div class="plat-grid">
           <div class="plat-cell">
-            <svg class="plat-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+            <div class="plat-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+            </div>
             <div class="plat-name">Windows</div>
           </div>
           <div class="plat-cell">
-            <svg class="plat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16.365 1.43c0 1.14-.46 2.2-1.2 2.95-.75.75-1.96 1.2-3.08 1.1-.14-1.1.42-2.26 1.16-3 .78-.76 2.06-1.18 3.12-1.05zM18.6 17.05c-.6 1.4-.87 2.02-1.64 3.26-1.07 1.7-2.58 3.82-4.44 3.83-1.65.02-2.08-1.08-4.33-1.07-2.25.01-2.72 1.09-4.37 1.07-1.86-.02-3.29-1.93-4.36-3.63C-1.33 13.3.1 7.54 2.4 7.3c1.18-.12 2.3.78 3.04.78.74 0 2.14-.96 3.62-.82 1.23.06 2.38.6 3.18 1.53-2.8 1.6-2.1 5.1.36 6.06-.42 1-.63 1.46-.9 2.2z"/></svg>
+            <div class="plat-icon">
+              <img src="https://cdn.simpleicons.org/apple" alt="macOS" loading="lazy">
+            </div>
             <div class="plat-name">macOS</div>
           </div>
           <div class="plat-cell">
-            <svg class="plat-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18.5h2" stroke="currentColor" stroke-width="1.5"/></svg>
+            <div class="plat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18.5h2" stroke-linecap="round"/></svg>
+            </div>
             <div class="plat-name">iPhone / iOS</div>
           </div>
           <div class="plat-cell">
-            <svg class="plat-icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 14c0-2 1.8-3 4-3s4 1 4 3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1" fill="currentColor"/><circle cx="15" cy="11" r="1" fill="currentColor"/></svg>
+            <div class="plat-icon">
+              <img src="https://cdn.simpleicons.org/linux" alt="Linux" loading="lazy">
+            </div>
             <div class="plat-name">Linux</div>
           </div>
           <div class="plat-cell">
-            <svg class="plat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M5 4h14v14H5z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="8" r="1"/><path d="M7 17l2 3M17 17l-2 3" stroke="currentColor" stroke-width="1.5"/></svg>
+            <div class="plat-icon">
+              <img src="https://cdn.simpleicons.org/android/3DDC84" alt="Android" loading="lazy">
+            </div>
             <div class="plat-name">Android</div>
           </div>
           <div class="plat-cell">
-            <svg class="plat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14 0 18M12 3c-3 3.5-3 14 0 18"/></svg>
+            <div class="plat-icon">
+              <img src="https://cdn.simpleicons.org/html5/E34F26" alt="Web" loading="lazy">
+            </div>
             <div class="plat-name">Web / H5</div>
           </div>
         </div>
@@ -876,63 +890,6 @@
         <p>交付后的问题修复与使用指导，按约定提供后续支持。</p>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ===== 提交需求 ===== -->
-<section class="section inquiry" id="inquiry">
-  <div class="wrap inq-grid">
-    <div class="inq-left reveal">
-      <span class="sec-tag">Get started</span>
-      <h2>有开发需求？<br>直接提交给我们</h2>
-      <p>
-        无论是完整项目还是一个还没成形的小想法，都可以先聊聊。
-        我们会认真评估每一个需求，给你一个实在的答复。
-      </p>
-      <div class="inq-contacts">
-        <div class="inq-contact">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          <span>联系电话：待补充</span>
-        </div>
-        <div class="inq-contact">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
-          <span>邮箱：待补充</span>
-        </div>
-      </div>
-    </div>
-
-    <form class="form reveal d2" id="req-form">
-      <div>
-        <label for="name">怎么称呼你</label>
-        <input id="name" name="name" type="text" placeholder="你的称呼" required>
-      </div>
-      <div>
-        <label for="contact">联系方式</label>
-        <input id="contact" name="contact" type="text" placeholder="电话 / 微信 / 邮箱，任选其一" required>
-      </div>
-      <div>
-        <label for="type">需求类型</label>
-        <select id="type" name="type">
-          <option value="网站 / Web 应用">网站 / Web 应用</option>
-          <option value="小程序 / H5">小程序 / H5</option>
-          <option value="脚本与自动化工具">脚本与自动化工具</option>
-          <option value="桌面 / 系统工具">桌面 / 系统工具</option>
-          <option value="API 与数据接口">API 与数据接口</option>
-          <option value="定制开发">定制开发</option>
-        </select>
-      </div>
-      <div>
-        <label for="desc">需求描述</label>
-        <textarea id="desc" name="desc" placeholder="简单描述你想做什么、大概的预期和时间" required></textarea>
-      </div>
-      <div>
-        <label for="files">附图（可选，可多选）</label>
-        <input id="files" type="file" accept="image/*" multiple>
-      </div>
-      <button class="btn btn-primary" type="submit" style="width:100%;padding:15px 22px">提交需求</button>
-      <div class="form-note" id="form-note">提交后需求会归档到项目仓库，我们会尽快联系你。</div>
-      <div class="form-success" id="form-success"></div>
-    </form>
   </div>
 </section>
 
