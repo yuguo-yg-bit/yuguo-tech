@@ -95,13 +95,13 @@
     position:absolute;inset:0;
     background-image:url("https://aka.doubaocdn.com/s/529fyVR3Kt");
     background-size:cover;background-position:center;
-    opacity:.85;
+    opacity:1;
+    filter:brightness(.72) saturate(.85);
   }
   .hero-bg::after{
     content:"";position:absolute;inset:0;
     background:
-      radial-gradient(1200px 500px at 20% 20%, rgba(77,141,255,.16), transparent 60%),
-      linear-gradient(180deg,rgba(5,10,24,.78) 0%,rgba(5,10,24,.88) 55%,var(--bg) 100%);
+      linear-gradient(180deg,rgba(5,10,24,.52) 0%,rgba(5,10,24,.72) 55%,var(--bg) 100%);
   }
   .hero-inner{
     position:relative;z-index:1;
