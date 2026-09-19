@@ -7,17 +7,18 @@
 <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
   :root{
-    --bg:#0A0F1E;
-    --bg-2:#0D1426;
-    --panel:#111A30;
-    --panel-2:#0E1628;
-    --line:#1F2B47;
-    --line-soft:#182240;
-    --text:#E9EEF8;
-    --muted:#94A1BF;
-    --accent:#F5A524;
-    --accent-deep:#D98B0D;
-    --cyan:#4FD1C5;
+    --bg:#050A18;
+    --bg-2:#081026;
+    --panel:#0B1530;
+    --panel-2:#0A1228;
+    --line:#16244A;
+    --line-soft:#101C3D;
+    --text:#E8EEFF;
+    --muted:#8FA3D8;
+    --accent:#4D8DFF;
+    --accent-deep:#2E6BFF;
+    --cyan:#35D6F5;
+    --purple:#A78BFA;
     --radius:16px;
     --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
     --sans:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
@@ -30,6 +31,7 @@
     color:var(--text);
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
   }
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
@@ -38,7 +40,7 @@
   /* ===== 顶部导航 ===== */
   header{
     position:sticky;top:0;z-index:50;
-    background:rgba(10,15,30,.82);
+    background:rgba(5,10,24,.82);
     backdrop-filter:blur(12px);
     border-bottom:1px solid var(--line-soft);
   }
@@ -54,7 +56,8 @@
     width:34px;height:34px;border-radius:9px;
     background:linear-gradient(135deg,var(--accent),var(--accent-deep));
     display:flex;align-items:center;justify-content:center;
-    color:#14100A;font-family:var(--mono);font-weight:600;font-size:15px;
+    color:#061030;font-family:var(--mono);font-weight:600;font-size:15px;
+    box-shadow:0 0 18px rgba(77,141,255,.45);
   }
   .nav-links{display:flex;align-items:center;gap:28px}
   .nav-links a{
@@ -71,132 +74,193 @@
     transition:transform .15s,box-shadow .2s,background .2s;
   }
   .btn:hover{transform:translateY(-1px)}
-  .btn-primary{background:var(--accent);color:#151006}
-  .btn-primary:hover{box-shadow:0 8px 24px rgba(245,165,36,.28)}
+  .btn-primary{
+    background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+    color:#04102E;
+  }
+  .btn-primary:hover{box-shadow:0 8px 28px rgba(77,141,255,.4)}
   .btn-ghost{
     background:transparent;color:var(--text);
     border-color:var(--line);
   }
   .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
 
-  /* ===== Hero ===== */
+  /* ===== Hero（大标题 + 代码图背景 + 呼吸灯） ===== */
   .hero{
     position:relative;
-    padding:96px 0 104px;
+    padding:120px 0 132px;
     overflow:hidden;
   }
   .hero-bg{
     position:absolute;inset:0;
-    background-image:url("https://aka.doubaocdn.com/s/JQjrsbTj5k");
+    background-image:url("https://aka.doubaocdn.com/s/529fyVR3Kt");
     background-size:cover;background-position:center;
-    opacity:.5;
+    opacity:.85;
   }
   .hero-bg::after{
     content:"";position:absolute;inset:0;
-    background:linear-gradient(180deg,rgba(10,15,30,.72) 0%,rgba(10,15,30,.88) 55%,var(--bg) 100%);
+    background:
+      radial-gradient(1200px 500px at 20% 20%, rgba(77,141,255,.16), transparent 60%),
+      linear-gradient(180deg,rgba(5,10,24,.78) 0%,rgba(5,10,24,.88) 55%,var(--bg) 100%);
   }
   .hero-inner{
     position:relative;z-index:1;
-    display:grid;grid-template-columns:1.15fr .85fr;gap:56px;
-    align-items:center;
+    max-width:880px;margin:0 auto;
+    text-align:center;
   }
   .eyebrow{
     display:inline-flex;align-items:center;gap:8px;
     font-family:var(--mono);font-size:13px;color:var(--cyan);
-    border:1px solid rgba(79,209,197,.35);
-    background:rgba(79,209,197,.08);
+    border:1px solid rgba(53,214,245,.35);
+    background:rgba(53,214,245,.08);
     padding:6px 14px;border-radius:999px;
     letter-spacing:.4px;
   }
-  .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--cyan)}
+  .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
   .hero h1{
-    margin:24px 0 18px;
-    font-size:52px;line-height:1.18;font-weight:900;
-    letter-spacing:.5px;
+    margin:30px 0 22px;
+    font-size:84px;line-height:1.08;font-weight:900;
+    letter-spacing:4px;
+    background:linear-gradient(180deg,#FFFFFF 20%,#A9C8FF 70%,#5B8FFF 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation:breathe 3.2s ease-in-out infinite;
   }
-  .hero h1 .accent-text{color:var(--accent)}
+  @keyframes breathe{
+    0%,100%{
+      filter:drop-shadow(0 0 14px rgba(77,141,255,.35));
+      transform:scale(1);
+    }
+    50%{
+      filter:drop-shadow(0 0 34px rgba(77,141,255,.85));
+      transform:scale(1.012);
+    }
+  }
+  .hero-slogans{
+    display:flex;justify-content:center;gap:18px;flex-wrap:wrap;
+    margin-bottom:30px;
+  }
+  .hero-slogan{
+    font-size:19px;font-weight:700;color:var(--text);
+    letter-spacing:1px;
+    display:inline-flex;align-items:center;gap:10px;
+  }
+  .hero-slogan .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--cyan);
+    box-shadow:0 0 12px var(--cyan);
+  }
   .hero-sub{
     font-size:17px;color:var(--muted);
-    max-width:520px;margin-bottom:36px;
+    max-width:560px;margin:0 auto 40px;
   }
-  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
   .hero-note{
-    margin-top:26px;
-    font-family:var(--mono);font-size:13px;color:var(--muted);
+    margin-top:28px;
+    font-family:var(--mono);font-size:13.5px;color:var(--muted);
   }
   .hero-note .cursor{
     display:inline-block;width:9px;height:17px;background:var(--accent);
     vertical-align:-2px;margin-left:4px;
+    box-shadow:0 0 8px var(--accent);
     animation:blink 1.1s steps(2) infinite;
   }
   @keyframes blink{50%{opacity:0}}
 
-  /* 终端签名元素 */
-  .terminal{
-    background:#0B1120;
-    border:1px solid var(--line);
-    border-radius:14px;
-    box-shadow:0 30px 70px rgba(0,0,0,.5);
-    overflow:hidden;
-    font-family:var(--mono);
-  }
-  .term-bar{
-    display:flex;align-items:center;gap:8px;
-    padding:13px 16px;
-    border-bottom:1px solid var(--line-soft);
-    background:#0D1428;
-  }
-  .term-dot{width:11px;height:11px;border-radius:50%}
-  .term-dot.r{background:#FF5F57}.term-dot.y{background:#FEBC2E}.term-dot.g{background:#28C840}
-  .term-title{
-    margin-left:8px;font-size:12.5px;color:var(--muted);
-    letter-spacing:.3px;
-  }
-  .term-body{padding:22px 22px 26px;font-size:13.5px;line-height:1.9;min-height:270px}
-  .term-body .tk-k{color:#C792EA}
-  .term-body .tk-s{color:#F5A524}
-  .term-body .tk-f{color:#82AAFF}
-  .term-body .tk-c{color:#5D6B8C}
-  .term-body .tk-n{color:#FFCB6B}
-  .term-cursor{display:inline-block;width:9px;height:16px;background:var(--accent);vertical-align:-2px;animation:blink 1.1s steps(2) infinite}
-
-  /* ===== 通用区块 ===== */
-  .section{padding:88px 0}
-  .sec-head{max-width:640px;margin-bottom:52px}
+  /* ===== 通用区块 + 滚动入场动画 ===== */
+  .section{padding:96px 0}
+  .sec-head{max-width:640px;margin-bottom:56px}
   .sec-tag{
     font-family:var(--mono);font-size:13px;color:var(--accent);
     letter-spacing:2px;text-transform:uppercase;
     display:flex;align-items:center;gap:12px;
   }
-  .sec-tag::before{content:"";width:28px;height:1px;background:var(--accent)}
+  .sec-tag::before{content:"";width:28px;height:1px;background:var(--accent);box-shadow:0 0 8px var(--accent)}
   .sec-head h2{
     margin-top:16px;
-    font-size:34px;font-weight:900;letter-spacing:.3px;
+    font-size:36px;font-weight:900;letter-spacing:.5px;
   }
   .sec-head p{margin-top:12px;color:var(--muted);font-size:16px}
 
-  /* ===== 服务 ===== */
+  .reveal{
+    opacity:0;
+    transform:translateY(46px);
+    transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.in{opacity:1;transform:translateY(0)}
+  .reveal.d1{transition-delay:.08s}
+  .reveal.d2{transition-delay:.16s}
+  .reveal.d3{transition-delay:.24s}
+  .reveal.d4{transition-delay:.32s}
+  .reveal.d5{transition-delay:.4s}
+
+  /* ===== 服务（每个卡片配对应代码终端） ===== */
   .services{background:var(--bg-2)}
   .svc-grid{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
   }
   .svc-card{
     background:var(--panel);
     border:1px solid var(--line-soft);
     border-radius:var(--radius);
-    padding:30px 26px;
-    transition:border-color .25s,transform .25s;
+    padding:28px 26px 24px;
+    display:flex;flex-direction:column;
+    transition:border-color .25s,transform .25s,box-shadow .25s;
   }
-  .svc-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+  .svc-card:hover{
+    border-color:rgba(77,141,255,.6);
+    transform:translateY(-5px);
+    box-shadow:0 18px 44px rgba(0,0,0,.45),0 0 26px rgba(77,141,255,.12);
+  }
   .svc-icon{
     width:46px;height:46px;border-radius:11px;
-    background:rgba(245,165,36,.12);
-    border:1px solid rgba(245,165,36,.28);
+    background:rgba(77,141,255,.12);
+    border:1px solid rgba(77,141,255,.3);
     display:flex;align-items:center;justify-content:center;
-    margin-bottom:20px;color:var(--accent);
+    margin-bottom:18px;color:var(--accent);
+    box-shadow:0 0 16px rgba(77,141,255,.15);
   }
-  .svc-card h3{font-size:18px;font-weight:700;margin-bottom:10px}
-  .svc-card p{font-size:14px;color:var(--muted);line-height:1.7}
+  .svc-card h3{font-size:18px;font-weight:700;margin-bottom:8px}
+  .svc-card .svc-desc{font-size:13.5px;color:var(--muted);line-height:1.7;margin-bottom:18px;min-height:46px}
+
+  /* 迷你代码终端 */
+  .mini-term{
+    margin-top:auto;
+    background:#060B1D;
+    border:1px solid var(--line-soft);
+    border-radius:10px;
+    overflow:hidden;
+    font-family:var(--mono);
+  }
+  .mini-term-bar{
+    display:flex;align-items:center;gap:6px;
+    padding:8px 12px;
+    border-bottom:1px solid var(--line-soft);
+    background:#081028;
+  }
+  .mini-term-bar i{width:9px;height:9px;border-radius:50%;display:block}
+  .mini-term-bar .r{background:#FF5F57}.mini-term-bar .y{background:#FEBC2E}.mini-term-bar .g{background:#28C840}
+  .mini-term-bar span{margin-left:6px;font-size:11px;color:var(--muted)}
+  .mini-term-body{
+    padding:14px 16px 18px;
+    font-size:11.5px;line-height:1.75;
+    min-height:210px;
+    white-space:pre;
+    overflow:hidden;
+    color:#C6D4F8;
+  }
+  .mini-term-body .tk-k{color:var(--purple)}
+  .mini-term-body .tk-s{color:#FFD479}
+  .mini-term-body .tk-f{color:var(--accent)}
+  .mini-term-body .tk-c{color:#5A6B96}
+  .mini-term-body .tk-n{color:#FFB86C}
+  .term-cursor{
+    display:inline-block;width:8px;height:14px;background:var(--cyan);
+    vertical-align:-2px;margin-left:2px;
+    box-shadow:0 0 8px var(--cyan);
+    animation:blink .9s steps(2) infinite;
+  }
 
   /* ===== 流程 ===== */
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
@@ -248,14 +312,14 @@
   }
   .form input:focus,.form select:focus,.form textarea:focus{border-color:var(--accent)}
   .form textarea{resize:vertical;min-height:120px}
-  .form select{appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A1BF' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 15px center}
+  .form select{appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238FA3D8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 15px center}
   .form select option{background:var(--panel)}
   .form-note{font-size:12.5px;color:var(--muted)}
   .form-success{
     display:none;
     margin-top:14px;padding:14px 16px;
-    border:1px solid rgba(79,209,197,.4);
-    background:rgba(79,209,197,.08);
+    border:1px solid rgba(53,214,245,.4);
+    background:rgba(53,214,245,.08);
     border-radius:10px;
     color:var(--cyan);font-size:14px;
   }
@@ -275,9 +339,8 @@
 
   /* ===== 响应式 ===== */
   @media (max-width:900px){
-    .hero-inner{grid-template-columns:1fr;gap:40px}
-    .hero{padding:64px 0 72px}
-    .hero h1{font-size:38px}
+    .hero{padding:84px 0 96px}
+    .hero h1{font-size:54px;letter-spacing:2px}
     .svc-grid{grid-template-columns:repeat(2,1fr)}
     .steps{grid-template-columns:repeat(2,1fr)}
     .step::before{display:none}
@@ -287,9 +350,10 @@
     .nav-links{display:none}
     .svc-grid{grid-template-columns:1fr}
     .steps{grid-template-columns:1fr}
-    .hero h1{font-size:31px}
+    .hero h1{font-size:40px}
     .sec-head h2{font-size:27px}
     .inq-left h2{font-size:27px}
+    .hero-slogan{font-size:16px}
     .form{padding:26px 20px}
   }
 </style>
@@ -312,91 +376,111 @@
   </div>
 </header>
 
-<!-- ===== Hero ===== -->
+<!-- ===== Hero：大标题 + 代码图背景 ===== -->
 <section class="hero" id="top">
   <div class="hero-bg"></div>
   <div class="wrap hero-inner">
-    <div>
-      <span class="eyebrow">代码开发 · 项目承接</span>
-      <h1>把代码交给<br><span class="accent-text">玉国信息科技</span></h1>
-      <p class="hero-sub">
-        从网站、小程序到脚本工具与系统定制，玉国信息科技承接各类软件开发项目。
-        有需求，告诉我们，剩下的事交给我们。
-      </p>
-      <div class="hero-cta">
-        <a class="btn btn-primary" href="#inquiry">提交开发需求</a>
-        <a class="btn btn-ghost" href="#services">看看能做什么</a>
-      </div>
-      <div class="hero-note">$ yuguo --start project<span class="cursor"></span></div>
+    <span class="eyebrow">代码开发 · 项目承接</span>
+    <h1>玉国承接代码</h1>
+    <div class="hero-slogans">
+      <span class="hero-slogan"><i class="dot"></i>复杂需求放心交付</span>
+      <span class="hero-slogan"><i class="dot"></i>网站 · 小程序 · 系统定制</span>
+      <span class="hero-slogan"><i class="dot"></i>源码可运行全程透明</span>
     </div>
-
-    <!-- 终端签名元素 -->
-    <div class="terminal" aria-hidden="true">
-      <div class="term-bar">
-        <span class="term-dot r"></span>
-        <span class="term-dot y"></span>
-        <span class="term-dot g"></span>
-        <span class="term-title">yuguo-tech / request.js</span>
-      </div>
-      <div class="term-body">
-        <div id="type-zone"></div>
-        <span class="term-cursor" id="term-cursor"></span>
-      </div>
+    <p class="hero-sub">
+      从想法到上线，代码的事交给专业的人。
+      提交你的需求，我们把每一行代码敲好。
+    </p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#inquiry">提交开发需求</a>
+      <a class="btn btn-ghost" href="#services">看看能做什么</a>
     </div>
+    <div class="hero-note">$ yuguo --start project<span class="cursor"></span></div>
   </div>
 </section>
 
-<!-- ===== 承接服务 ===== -->
+<!-- ===== 承接服务（每个板块对应一段代码打字动画） ===== -->
 <section class="section services" id="services">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head reveal">
       <span class="sec-tag">What we build</span>
       <h2>我们承接哪些代码开发</h2>
-      <p>一个需求对应一个方案，按项目报价，开发过程保持沟通透明。</p>
+      <p>一个需求对应一个方案，按项目报价，开发过程保持沟通透明。往下看，每一类服务我们都亲手敲给你看。</p>
     </div>
     <div class="svc-grid">
-      <div class="svc-card">
+
+      <div class="svc-card reveal d1">
         <div class="svc-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 9l-2 3 2 3M13 15h3"/></svg>
         </div>
         <h3>网站 / Web 应用</h3>
-        <p>企业官网、展示页、后台管理系统，前端界面与后端逻辑一起交付。</p>
+        <p class="svc-desc">企业官网、展示页、后台管理系统，前端界面与后端逻辑一起交付。</p>
+        <div class="mini-term">
+          <div class="mini-term-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>web-server.js</span></div>
+          <div class="mini-term-body" data-code="web"></div>
+        </div>
       </div>
-      <div class="svc-card">
+
+      <div class="svc-card reveal d2">
         <div class="svc-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg>
         </div>
         <h3>小程序 / H5</h3>
-        <p>微信小程序、移动端 H5 页面，适配手机端的轻量应用开发。</p>
+        <p class="svc-desc">微信小程序、移动端 H5 页面，适配手机端的轻量应用开发。</p>
+        <div class="mini-term">
+          <div class="mini-term-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>app.js</span></div>
+          <div class="mini-term-body" data-code="mini"></div>
+        </div>
       </div>
-      <div class="svc-card">
+
+      <div class="svc-card reveal d3">
         <div class="svc-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
         </div>
         <h3>脚本与自动化工具</h3>
-        <p>数据处理脚本、文件批量处理、自动化工作流，把重复劳动交给代码。</p>
+        <p class="svc-desc">数据处理脚本、文件批量处理、自动化工作流，把重复劳动交给代码。</p>
+        <div class="mini-term">
+          <div class="mini-term-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>batch.js</span></div>
+          <div class="mini-term-body" data-code="script"></div>
+        </div>
       </div>
-      <div class="svc-card">
+
+      <div class="svc-card reveal d1">
         <div class="svc-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
         </div>
         <h3>桌面 / 系统工具</h3>
-        <p>按需定制的桌面小工具、系统辅助程序，解决特定场景的实际问题。</p>
+        <p class="svc-desc">按需定制的桌面小工具、系统辅助程序，解决特定场景的实际问题。</p>
+        <div class="mini-term">
+          <div class="mini-term-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>desktop.js</span></div>
+          <div class="mini-term-body" data-code="desktop"></div>
+        </div>
       </div>
-      <div class="svc-card">
+
+      <div class="svc-card reveal d2">
         <div class="svc-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l3 3-3 3M13 15h4M3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/></svg>
         </div>
         <h3>API 与数据接口</h3>
-        <p>接口开发、数据对接、爬虫与数据整理，让不同系统之间顺畅协作。</p>
+        <p class="svc-desc">接口开发、数据对接、爬虫与数据整理，让不同系统之间顺畅协作。</p>
+        <div class="mini-term">
+          <div class="mini-term-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>api-gateway.js</span></div>
+          <div class="mini-term-body" data-code="api"></div>
+        </div>
       </div>
-      <div class="svc-card">
+
+      <div class="svc-card reveal d3">
         <div class="svc-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.5"/></svg>
         </div>
         <h3>定制开发</h3>
-        <p>说不清类别？直接把想法讲给我们，一起评估可行性和方案。</p>
+        <p class="svc-desc">说不清类别？直接把想法讲给我们，一起评估可行性和方案。</p>
+        <div class="mini-term">
+          <div class="mini-term-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>custom.js</span></div>
+          <div class="mini-term-body" data-code="custom"></div>
+        </div>
       </div>
+
     </div>
   </div>
 </section>
@@ -404,28 +488,28 @@
 <!-- ===== 合作流程 ===== -->
 <section class="section" id="process">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head reveal">
       <span class="sec-tag">How it works</span>
       <h2>四步，项目从想法到交付</h2>
       <p>流程清晰透明，每一步都有明确产出，不会让需求石沉大海。</p>
     </div>
     <div class="steps">
-      <div class="step">
+      <div class="step reveal d1">
         <span class="step-num">01 / 提交需求</span>
         <h3>告诉我们你要什么</h3>
         <p>填写下方表单，或直接联系，把项目想法、范围和时间预期讲清楚。</p>
       </div>
-      <div class="step">
+      <div class="step reveal d2">
         <span class="step-num">02 / 沟通方案</span>
         <h3>确认方案与报价</h3>
         <p>我们评估工作量，给出技术方案与报价，双方确认后进入开发。</p>
       </div>
-      <div class="step">
+      <div class="step reveal d3">
         <span class="step-num">03 / 开发交付</span>
         <h3>按节点推进开发</h3>
         <p>分阶段开发、及时同步进度，完成后交付源码与使用说明。</p>
       </div>
-      <div class="step">
+      <div class="step reveal d4">
         <span class="step-num">04 / 售后支持</span>
         <h3>交付后持续跟进</h3>
         <p>交付后的问题修复与使用指导，按约定提供后续支持。</p>
@@ -437,7 +521,7 @@
 <!-- ===== 提交需求 ===== -->
 <section class="section inquiry" id="inquiry">
   <div class="wrap inq-grid">
-    <div class="inq-left">
+    <div class="inq-left reveal">
       <span class="sec-tag">Get started</span>
       <h2>有开发需求？<br>直接提交给我们</h2>
       <p>
@@ -456,7 +540,7 @@
       </div>
     </div>
 
-    <form class="form" id="req-form">
+    <form class="form reveal d2" id="req-form">
       <div>
         <label for="name">怎么称呼你</label>
         <input id="name" name="name" type="text" placeholder="你的称呼" required>
@@ -507,65 +591,237 @@
 var _ks1 = "vzKu69L/Og9muJ";
 var _kv  = "EgajaMIrPJPtNBd0";
 
-/* ===== 终端打字机 ===== */
+/* ===== 滚动入场动画 ===== */
 (function(){
-  var lines = [
-    ['tk-c','// 收到需求后，我们这样开始'],
-    ['','const project = '],
-    ['tk-f','new Project'],
-    ['','({'],
-    ['  ','  name: '],
-    ['tk-s','"你的项目"'],
-    ['',','],
-    ['  ','  type: '],
-    ['tk-s','"web / mini-program / script"'],
-    ['',','],
-    ['  ','  status: '],
-    ['tk-s','"开发中"'],
-    ['','});'],
-    ['',''],
-    ['tk-f','project'],
-    ['','.'],
-    ['tk-f','deliver'],
+  var items = document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){
+    items.forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  }, {threshold:.12, rootMargin:'0px 0px -40px 0px'});
+  items.forEach(function(el){ io.observe(el); });
+})();
+
+/* ===== 服务代码（每个板块对应一段代码，逐行敲出） ===== */
+var CODE_BLOCKS = {
+  web: [
+    ['tk-c','// 企业级 Web 应用：接口 + 鉴权 + 缓存'],
+    ['','const express = '],
+    ['tk-f','require'],
     ['','('],
-    ['tk-n','"玉国信息科技"'],
-    ['',');']
-  ];
-  var zone = document.getElementById('type-zone');
-  var cursor = document.getElementById('term-cursor');
-  if(!zone) return;
-  var li = 0, ci = 0, buf = '';
-  function renderSeg(){
-    var html = '';
-    for(var i=0;i<lines.length;i++){
-      if(i < li){
-        html += '<span class="'+lines[i][0]+'">'+lines[i][1]+'</span>';
-      }
+    ['tk-s',"'express'"],
+    ['',')'],
+    ['','const app = express()'],
+    ['','app.use(helmet(), cors(), rateLimit({'],
+    ['  ','  windowMs: 15 * 60 * 1000,'],
+    ['  ','  max: 100,'],
+    ['  ','  standardHeaders: true'],
+    ['','}))'],
+    ['','app.get('],
+    ['tk-s',"'/api/order/:id'"],
+    ['',', async (req, res) => {'],
+    ['  ','  const order = await db.orders'],
+    ['  ','    .where('],
+    ['tk-s',"'id'"],
+    ['',', req.params.id)'],
+    ['  ','    .with('],
+    ['tk-s',"'items'"],
+    ['',', q => q.orderBy('],
+    ['tk-s',"'sort'"],
+    ['','))'],
+    ['  ','  res.json({ code: 0, data: order })'],
+    ['','})'],
+    ['','app.listen(3000, () => console.log('],
+    ['tk-s',"'api ready'"],
+    ['','))']
+  ],
+  mini: [
+    ['tk-c','// 小程序：分页列表 + 下拉刷新 + 防抖'],
+    ['','Page({'],
+    ['  ','  data: { list: [], page: 1, loading: false },'],
+    ['','  async onLoad() {'],
+    ['  ','    await this.fetchPage(1)'],
+    ['  ','  },'],
+    ['','  async fetchPage(page) {'],
+    ['  ','    if (this.data.loading) return'],
+    ['  ','    this.setData({ loading: true })'],
+    ['  ','    const { data } = await wx.request({'],
+    ['  ','      url: '],
+    ['tk-s',"'/api/products'"],
+    ['',','],
+    ['  ','      data: { page, size: 10 }'],
+    ['  ','    })'],
+    ['  ','    this.setData({'],
+    ['  ','      list: [...this.data.list, ...data.items],'],
+    ['  ','      page, loading: false'],
+    ['  ','    })'],
+    ['  ','  },'],
+    ['','  onReachBottom() {'],
+    ['  ','    this.fetchPage(this.data.page + 1)'],
+    ['  ','  }'],
+    ['','})']
+  ],
+  script: [
+    ['tk-c','// 自动化：批量重命名 + 目录整理'],
+    ['','const fs = '],
+    ['tk-f','require'],
+    ['','('],
+    ['tk-s',"'fs'"],
+    ['',')'],
+    ['','const path = '],
+    ['tk-f','require'],
+    ['','('],
+    ['tk-s',"'path'"],
+    ['',')'],
+    ['','async function organize(dir) {'],
+    ['  ','  const files = await fs.promises.readdir(dir)'],
+    ['  ','  for (const file of files) {'],
+    ['  ','    const ext = path.extname(file)'],
+    ['  ','    const target = path.join(dir, ext.slice(1))'],
+    ['  ','    await fs.promises.mkdir(target, { recursive: true })'],
+    ['  ','    await fs.promises.rename('],
+    ['  ','      path.join(dir, file),'],
+    ['  ','      path.join(target, file)'],
+    ['  ','    )'],
+    ['  ','  }'],
+    ['','}'],
+    ['','organize('],
+    ['tk-s',"'./downloads'"],
+    ['',')']
+  ],
+  desktop: [
+    ['tk-c','// 桌面工具：主进程 + 文件监控 + 托盘'],
+    ['','const { app, BrowserWindow, ipcMain } = '],
+    ['tk-f','require'],
+    ['','('],
+    ['tk-s',"'electron'"],
+    ['',')'],
+    ['','ipcMain.handle('],
+    ['tk-s',"'export:data'"],
+    ['',', async (e, payload) => {'],
+    ['  ','  const rows = transform(payload)'],
+    ['  ','  const buffer = await zip(rows)'],
+    ['  ','  const { canceled, filePath } ='],
+    ['  ','    await dialog.showSaveDialog({'],
+    ['  ','      defaultPath: '],
+    ['tk-s',"`export_${Date.now()}.zip`"],
+    ['  ','    })'],
+    ['  ','  if (!canceled) fs.writeFileSync(filePath, buffer)'],
+    ['  ','  return { ok: !canceled }'],
+    ['','})'],
+    ['','app.whenReady().then(createWindow)']
+  ],
+  api: [
+    ['tk-c','// 数据接口：抓取 + 清洗 + 限流 + 聚合'],
+    ['','async function crawl(url, rules) {'],
+    ['  ','  const html = await fetch(url).then(r => r.text())'],
+    ['  ','  const $ = parse(html)'],
+    ['  ','  return rules.map(r => ({'],
+    ['  ','    key: r.key,'],
+    ['  ','    value: $(r.selector).first().text()'],
+    ['  ','  }))'],
+    ['','}'],
+    ['','app.post('],
+    ['tk-s',"'/api/collect'"],
+    ['',', async (req, res) => {'],
+    ['  ','  const jobs = req.body.urls.map(u =>'],
+    ['  ','    crawl(u, req.body.rules).catch(() => null)'],
+    ['  ','  )'],
+    ['  ','  const result = await Promise.all(jobs)'],
+    ['  ','  res.json(result.filter(Boolean))'],
+    ['','})']
+  ],
+  custom: [
+    ['tk-c','// 定制开发：带重试的并发任务队列'],
+    ['','class TaskQueue {'],
+    ['  ','  constructor(limit = 5, retries = 3) {'],
+    ['  ','    this.limit = limit'],
+    ['  ','    this.retries = retries'],
+    ['  ','    this.running = 0'],
+    ['  ','    this.queue = []'],
+    ['  ','  }'],
+    ['','  async run(task) {'],
+    ['  ','    for (let i = 0; i < this.retries; i++) {'],
+    ['  ','      try { return await task() }'],
+    ['  ','      catch (err) {'],
+    ['  ','        if (i === this.retries - 1) throw err'],
+    ['  ','        await sleep(2 ** i * 500)'],
+    ['  ','      }'],
+    ['  ','    }'],
+    ['  ','  }'],
+    ['','}'],
+    ['','// 用法：new TaskQueue(4).run(job)']
+  ]
+};
+
+/* 代码高亮输出（分段渲染，按进度） */
+function renderCode(el, segs, seg, char){
+  var html = '';
+  for(var i=0;i<segs.length;i++){
+    if(i < seg){
+      html += '<span class="'+segs[i][0]+'">'+segs[i][1]+'</span>';
+    } else if(i === seg){
+      html += '<span class="'+segs[i][0]+'">'+segs[i][1].slice(0,char)+'</span>';
     }
-    zone.innerHTML = html;
   }
-  function type(){
-    if(li >= lines.length){ cursor.style.display = 'inline-block'; return; }
-    var seg = lines[li];
-    var text = seg[1];
-    if(ci < text.length){
-      ci++;
-      renderSeg();
-      var html = '';
-      for(var i=0;i<lines.length;i++){
-        if(i < li){ html += '<span class="'+lines[i][0]+'">'+lines[i][1]+'</span>'; }
-      }
-      if(li < lines.length){
-        html += '<span class="'+lines[li][0]+'">'+text.slice(0,ci)+'</span>';
-      }
-      zone.innerHTML = html;
-      setTimeout(type, 26 + Math.random()*46);
+  el.innerHTML = html;
+}
+
+/* 逐字符敲代码（保持字符级流畅，像真人输入） */
+function typeCode(el, segs, callback){
+  var seg = 0, char = 0, done = false;
+  var cursor = document.createElement('span');
+  cursor.className = 'term-cursor';
+  el.appendChild(cursor);
+
+  function step(){
+    if(done) return;
+    if(seg >= segs.length){ done = true; cursor.style.display='none'; if(callback) callback(); return; }
+    var cur = segs[seg];
+    if(char < cur[1].length){
+      char++;
+      renderCode(el, segs, seg, char);
+      var delay = 28 + Math.random()*55;
+      if(/[，。；：、）\]\}》]/.test(cur[1][char-1])) delay += 120;
+      setTimeout(step, delay);
     } else {
-      li++; ci = 0;
-      setTimeout(type, 180);
+      seg++; char = 0;
+      setTimeout(step, 90 + Math.random()*60);
     }
   }
-  setTimeout(type, 500);
+  step();
+}
+
+/* 滚动到服务区时依次触发各板块敲代码 */
+(function(){
+  var bodies = document.querySelectorAll('.mini-term-body');
+  var started = {};
+  function startFor(el){
+    var key = el.getAttribute('data-code');
+    if(started[key]) return;
+    started[key] = true;
+    typeCode(el, CODE_BLOCKS[key]);
+  }
+  if(!('IntersectionObserver' in window)){
+    bodies.forEach(function(el){ startFor(el); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        startFor(en.target);
+        io.unobserve(en.target);
+      }
+    });
+  }, {threshold:.3});
+  bodies.forEach(function(el){ io.observe(el); });
 })();
 
 /* ===== 工具函数 ===== */
