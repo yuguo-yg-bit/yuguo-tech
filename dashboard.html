@@ -10,6 +10,7 @@
     --bg:#050A18;
     --bg-2:#081026;
     --panel:#0B1530;
+    --panel-2:#0A1228;
     --line:#16244A;
     --line-soft:#101C3D;
     --text:#E8EEFF;
@@ -17,7 +18,12 @@
     --accent:#4D8DFF;
     --accent-deep:#2E6BFF;
     --cyan:#35D6F5;
-    --radius:16px;
+    --purple:#A78BFA;
+    --green:#34D399;
+    --orange:#FFA94D;
+    --red:#FF6B6B;
+    --gray:#6B7280;
+    --radius:14px;
     --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
     --sans:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
   }
@@ -29,6 +35,7 @@
     -webkit-font-smoothing:antialiased;
   }
   a{color:inherit;text-decoration:none}
+  button{font-family:inherit}
 
   /* ===== 侧栏 ===== */
   .sidebar{
@@ -37,6 +44,7 @@
     border-right:1px solid var(--line-soft);
     padding:28px 22px;
     display:flex;flex-direction:column;
+    position:sticky;top:0;height:100vh;
   }
   .brand{
     display:flex;align-items:center;gap:10px;
@@ -63,7 +71,7 @@
     margin-bottom:12px;
   }
   .user-card .uname{font-size:15px;font-weight:700}
-  .user-card .uphone{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-top:4px}
+  .user-card .uphone{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-top:4px;word-break:break-all}
   .user-card .ulevel{
     display:inline-block;margin-top:10px;
     font-family:var(--mono);font-size:11px;color:var(--cyan);
@@ -88,45 +96,305 @@
     font-size:14px;color:var(--muted);
     border:1px solid var(--line-soft);
     background:transparent;cursor:pointer;
-    transition:all .2s;font-family:var(--sans);
+    transition:all .2s;
   }
-  .logout:hover{border-color:#FF6B6B;color:#FF9E9E}
+  .logout:hover{border-color:var(--red);color:#FF9E9E}
 
   /* ===== 主区 ===== */
   .main{
-    flex:1;padding:44px 48px;
+    flex:1;padding:44px 48px 120px;
     overflow-y:auto;
+    position:relative;
   }
-  .main h1{
+  .page-head{
+    display:flex;align-items:flex-end;justify-content:space-between;
+    margin-bottom:8px;flex-wrap:wrap;gap:12px;
+  }
+  .page-head h1{
     font-size:30px;font-weight:900;letter-spacing:.5px;
-    margin-bottom:8px;
   }
-  .main .welcome{
+  .page-head .welcome{
     font-family:var(--mono);font-size:13.5px;color:var(--cyan);
-    margin-bottom:36px;
+    margin-top:4px;
   }
-  .placeholder{
-    border:1px dashed rgba(77,141,255,.35);
+  .page-head .sync-info{
+    font-family:var(--mono);font-size:12px;color:var(--muted);
+    display:flex;align-items:center;gap:8px;
+  }
+  .sync-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 6px var(--green);
+  }
+  .sync-dot.syncing{background:var(--orange);box-shadow:0 0 6px var(--orange);animation:pulse 1s infinite}
+  .sync-dot.error{background:var(--red);box-shadow:0 0 6px var(--red)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  /* ===== 分区标题 ===== */
+  .section-title{
+    font-size:14px;font-weight:700;color:var(--muted);
+    letter-spacing:1px;text-transform:uppercase;
+    margin:32px 0 14px;display:flex;align-items:center;gap:10px;
+  }
+  .section-title:first-of-type{margin-top:18px}
+  .section-title .count{
+    font-family:var(--mono);font-size:12px;
+    background:var(--panel);padding:2px 9px;border-radius:999px;
+    color:var(--accent);
+  }
+
+  /* ===== 项目网格 ===== */
+  .project-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:16px;
+  }
+  .project-card{
+    background:linear-gradient(160deg,var(--panel) 0%,var(--panel-2) 100%);
+    border:1px solid var(--line-soft);
+    border-radius:var(--radius);
+    padding:22px 20px;
+    cursor:pointer;
+    transition:all .25s;
+    position:relative;overflow:hidden;
+  }
+  .project-card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:2px;
+    background:var(--card-accent,var(--accent));
+    opacity:.7;
+  }
+  .project-card:hover{
+    border-color:var(--line);
+    transform:translateY(-2px);
+    box-shadow:0 8px 24px rgba(0,0,0,.4);
+  }
+  .project-card .card-head{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:10px;gap:10px;
+  }
+  .project-card .card-name{
+    font-size:17px;font-weight:900;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    flex:1;min-width:0;
+  }
+  .status-badge{
+    font-family:var(--mono);font-size:11.5px;font-weight:600;
+    padding:3px 9px;border-radius:999px;flex:none;
+    background:rgba(255,255,255,.06);
+    border:1px solid currentColor;
+  }
+  .project-card .card-meta{
+    font-family:var(--mono);font-size:11.5px;color:var(--muted);
+    margin-bottom:12px;
+  }
+  .project-card .card-desc{
+    font-size:13.5px;color:var(--muted);
+    line-height:1.55;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+    overflow:hidden;
+    margin-bottom:14px;
+    min-height:63px;
+  }
+  .project-card .card-foot{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-top:12px;border-top:1px solid var(--line-soft);
+    font-family:var(--mono);font-size:11.5px;color:var(--muted);
+  }
+  .project-card .card-foot .arrow{color:var(--accent);font-weight:700}
+
+  /* 申请中卡片(虚线样式) */
+  .apply-card{
+    background:var(--panel);
+    border:1px dashed rgba(255,169,77,.4);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    cursor:default;
+    position:relative;overflow:hidden;
+  }
+  .apply-card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:2px;
+    background:var(--orange);opacity:.7;
+  }
+  .apply-card .card-head .card-name{color:var(--orange)}
+  .apply-card .card-desc{
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+
+  /* ===== 空状态 ===== */
+  .empty-state{
+    border:1px dashed rgba(77,141,255,.3);
     border-radius:var(--radius);
     background:rgba(77,141,255,.04);
     padding:80px 40px;
     text-align:center;
     color:var(--muted);
   }
-  .placeholder .big{
-    font-family:var(--mono);font-size:48px;color:var(--accent);
-    opacity:.5;margin-bottom:18px;display:block;
+  .empty-state .icon{
+    font-family:var(--mono);font-size:64px;
+    color:var(--accent);opacity:.4;margin-bottom:18px;
+    line-height:1;
   }
-  .placeholder p{font-size:15px}
+  .empty-state .title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .empty-state .sub{font-size:14px;color:var(--muted)}
 
-  @media (max-width:800px){
+  /* ===== FAB ===== */
+  .fab{
+    position:fixed;bottom:32px;right:32px;z-index:30;
+    background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+    color:#04102E;
+    border:none;
+    padding:14px 22px;
+    border-radius:999px;
+    font-size:15px;font-weight:900;
+    cursor:pointer;
+    box-shadow:0 8px 24px rgba(77,141,255,.45);
+    transition:transform .15s,box-shadow .2s;
+    display:flex;align-items:center;gap:8px;
+  }
+  .fab:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(77,141,255,.55)}
+  .fab:active{transform:translateY(0)}
+  .fab .plus{font-size:20px;line-height:1}
+
+  /* ===== 模态弹窗 ===== */
+  .modal-overlay{
+    position:fixed;inset:0;z-index:50;
+    background:rgba(5,10,24,.78);
+    backdrop-filter:blur(6px);
+    display:none;align-items:center;justify-content:center;
+    padding:20px;
+  }
+  .modal-overlay.show{display:flex;animation:fadeIn .2s}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .modal{
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-radius:16px;
+    width:100%;max-width:560px;
+    max-height:90vh;
+    display:flex;flex-direction:column;
+    box-shadow:0 24px 60px rgba(0,0,0,.6);
+    animation:slideUp .25s cubic-bezier(.2,.7,.2,1);
+  }
+  @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .modal-head{
+    padding:22px 26px 14px;
+    border-bottom:1px solid var(--line-soft);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .modal-head h2{
+    font-size:20px;font-weight:900;
+  }
+  .modal-head .sub{
+    font-family:var(--mono);font-size:12px;color:var(--cyan);
+    margin-top:4px;
+  }
+  .modal-close{
+    width:34px;height:34px;border-radius:9px;
+    background:transparent;border:1px solid var(--line-soft);
+    color:var(--muted);font-size:18px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .2s;
+  }
+  .modal-close:hover{border-color:var(--red);color:var(--red)}
+  .modal-body{
+    padding:22px 26px;
+    overflow-y:auto;flex:1;
+  }
+  .modal-foot{
+    padding:16px 26px;
+    border-top:1px solid var(--line-soft);
+    display:flex;justify-content:flex-end;gap:10px;
+  }
+  .field{margin-bottom:18px}
+  .field label{
+    display:block;font-size:14px;font-weight:600;margin-bottom:8px;
+    color:var(--text);
+  }
+  .field .hint{font-size:12px;color:var(--muted);margin-top:6px}
+  .field input[type="text"],
+  .field input[type="tel"],
+  .field textarea{
+    width:100%;background:var(--bg);
+    border:1px solid var(--line);border-radius:10px;
+    color:var(--text);font-family:var(--sans);font-size:14.5px;
+    padding:11px 14px;outline:none;
+    transition:border-color .2s;
+  }
+  .field input:focus,.field textarea:focus{border-color:var(--accent)}
+  .field textarea{resize:vertical;min-height:110px;line-height:1.55}
+  .field input[type="file"]{
+    width:100%;font-size:13px;color:var(--muted);
+    padding:10px 0;
+  }
+  .field input[type="file"]::file-selector-button{
+    margin-right:10px;padding:6px 12px;
+    background:var(--panel);border:1px solid var(--line);
+    color:var(--text);border-radius:7px;cursor:pointer;
+    font-family:var(--sans);font-size:13px;
+  }
+  .btn{
+    padding:11px 22px;border-radius:10px;border:none;
+    font-size:14.5px;font-weight:700;cursor:pointer;
+    transition:all .2s;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+    color:#04102E;
+  }
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(77,141,255,.4)}
+  .btn-primary:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn-ghost{
+    background:transparent;border:1px solid var(--line-soft);
+    color:var(--muted);
+  }
+  .btn-ghost:hover{border-color:var(--line);color:var(--text)}
+  .progress{
+    font-family:var(--mono);font-size:12.5px;color:var(--muted);
+    margin-top:6px;min-height:18px;
+  }
+  .progress.err{color:#FF9E8E}
+  .progress.ok{color:var(--cyan)}
+  .toast{
+    position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-20px);
+    background:var(--panel);border:1px solid var(--cyan);
+    color:var(--cyan);
+    padding:11px 22px;border-radius:10px;
+    font-size:14px;font-weight:600;
+    z-index:100;opacity:0;
+    transition:opacity .25s,transform .25s;
+    box-shadow:0 8px 24px rgba(0,0,0,.4);
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* 滚动条 */
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+  /* 响应式 */
+  @media (max-width:900px){
+    .sidebar{width:220px;padding:22px 18px}
+    .main{padding:32px 28px 120px}
+    .fab{bottom:24px;right:24px;padding:12px 18px;font-size:14px}
+  }
+  @media (max-width:700px){
     body{flex-direction:column}
-    .sidebar{width:100%;flex-direction:row;align-items:center;padding:16px 20px}
-    .brand{margin-bottom:0;margin-right:16px}
-    .user-card{margin-bottom:0;margin-right:16px;padding:10px 14px;display:flex;align-items:center;gap:10px}
-    .user-card .avatar{width:34px;height:34px;font-size:14px;margin-bottom:0}
+    .sidebar{
+      width:100%;flex-direction:row;align-items:center;
+      padding:14px 18px;height:auto;position:static;
+      gap:12px;flex-wrap:wrap;
+    }
+    .brand{margin-bottom:0;margin-right:8px}
+    .user-card{margin-bottom:0;padding:8px 12px;display:flex;align-items:center;gap:10px}
+    .user-card .avatar{width:32px;height:32px;font-size:14px;margin-bottom:0}
+    .user-card .ulevel{display:none}
     .nav-menu{display:none}
-    .main{padding:28px 22px}
+    .logout{margin-top:0;padding:8px 12px;font-size:13px}
+    .main{padding:24px 18px 120px}
+    .page-head h1{font-size:24px}
+    .project-grid{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -147,10 +415,11 @@
   </div>
 
   <nav class="nav-menu">
-    <a href="#" class="active">总览</a>
-    <a href="#">我的需求</a>
-    <a href="#">项目文件</a>
-    <a href="#">账单与交付</a>
+    <a href="dashboard.html" class="active">总览</a>
+    <a href="#">我的项目</a>
+    <a href="#">我的文件仓库</a>
+    <a href="#">交付成果</a>
+    <a href="#">个人设置</a>
   </nav>
 
   <button class="logout" id="logout">退出登录</button>
@@ -158,30 +427,81 @@
 
 <!-- ===== 主区 ===== -->
 <main class="main">
-  <h1>控制台</h1>
-  <div class="welcome" id="welcome">// welcome back</div>
+  <div class="page-head">
+    <div>
+      <h1>总览</h1>
+      <div class="welcome" id="welcome">// welcome back</div>
+    </div>
+    <div class="sync-info">
+      <span class="sync-dot" id="sync-dot"></span>
+      <span id="sync-text">同步就绪</span>
+    </div>
+  </div>
 
-  <div class="placeholder">
-    <span class="big">&lt;/&gt;</span>
-    <p>这里暂时留空，后续会展示你的项目进度、需求记录和交付物。</p>
+  <!-- 申请审核中 -->
+  <div class="section-title" id="pending-title" style="display:none">
+    申请审核中
+    <span class="count" id="pending-count">0</span>
+  </div>
+  <div class="project-grid" id="pending-list"></div>
+
+  <!-- 我的项目 -->
+  <div class="section-title">我的项目 <span class="count" id="projects-count">0</span></div>
+  <div id="projects-area">
+    <div class="project-grid" id="projects-list"></div>
+    <div class="empty-state" id="empty-state" style="display:none">
+      <div class="icon">&lt;/&gt;</div>
+      <div class="title">暂无任何项目</div>
+      <div class="sub">点击右下角"添加项目"按钮,发起新的项目对接申请</div>
+    </div>
+  </div>
+
+  <button class="fab" id="fab-add"><span class="plus">+</span> 添加项目</button>
+
+  <!-- 添加项目弹窗 -->
+  <div class="modal-overlay" id="apply-modal" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <h2>添加项目</h2>
+          <div class="sub">// new project application</div>
+        </div>
+        <button class="modal-close" id="modal-close" aria-label="关闭">×</button>
+      </div>
+      <form id="apply-form">
+        <div class="modal-body">
+          <div class="field">
+            <label>项目名称 <span style="color:var(--red)">*</span></label>
+            <input type="text" id="ap-name" maxlength="40" placeholder="例如:官网重构 / 内部 OA 系统" required>
+          </div>
+          <div class="field">
+            <label>想要实现的基本功能 <span style="color:var(--red)">*</span></label>
+            <textarea id="ap-desc" maxlength="2000" placeholder="详细描述业务背景、想完成什么代码功能、参考产品等" required></textarea>
+            <div class="hint">尽量写清楚输入输出、用户角色、核心流程,方便客服准确评估</div>
+          </div>
+          <div class="field">
+            <label>附件(可选,多张图片)</label>
+            <input type="file" id="ap-files" multiple accept="image/*">
+            <div class="hint">支持多张截图、参考图、流程图,单张不超过 5MB</div>
+          </div>
+          <div class="field">
+            <label>联系方式</label>
+            <input type="tel" id="ap-contact" placeholder="默认填手机号,可改为微信/邮箱">
+          </div>
+          <div class="progress" id="ap-progress"></div>
+        </div>
+        <div class="modal-foot">
+          <button type="button" class="btn btn-ghost" id="ap-cancel">取消</button>
+          <button type="submit" class="btn btn-primary" id="ap-submit">提交联系申请</button>
+        </div>
+      </form>
+    </div>
   </div>
 </main>
 
-<script>
-var phone = localStorage.getItem('yuguo_user');
-if(!phone){
-  location.href = 'login.html';
-} else {
-  document.getElementById('avatar').textContent = phone.slice(0,2);
-  document.getElementById('uname').textContent = '用户 ' + phone.slice(0,3) + '****' + phone.slice(-2);
-  document.getElementById('uphone').textContent = phone;
-  document.getElementById('welcome').textContent = '// welcome back, ' + phone;
-}
-document.getElementById('logout').addEventListener('click', function(){
-  localStorage.removeItem('yuguo_user');
-  location.href = 'login.html';
-});
-</script>
+<div class="toast" id="toast"></div>
 
+<script src="github-api.js"></script>
+<script src="dashboard.js"></script>
 </body>
 </html>
