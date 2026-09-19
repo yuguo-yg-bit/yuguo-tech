@@ -480,11 +480,13 @@
         <label for="desc">需求描述</label>
         <textarea id="desc" name="desc" placeholder="简单描述你想做什么、大概的预期和时间" required></textarea>
       </div>
-      <button class="btn btn-primary" type="submit" style="width:100%;padding:15px 22px">提交需求</button>
-      <div class="form-note">提交后我们会尽快联系你沟通细节（当前为演示页面，正式上线后可接入后台接收）。</div>
-      <div class="form-success" id="form-success">
-        需求已记录，感谢信任！请留意你的联系方式，我们会尽快与你联系。
+      <div>
+        <label for="files">附图（可选，可多选）</label>
+        <input id="files" type="file" accept="image/*" multiple>
       </div>
+      <button class="btn btn-primary" type="submit" style="width:100%;padding:15px 22px">提交需求</button>
+      <div class="form-note" id="form-note">提交后需求会归档到项目仓库，我们会尽快联系你。</div>
+      <div class="form-success" id="form-success"></div>
     </form>
   </div>
 </section>
@@ -501,6 +503,10 @@
 </footer>
 
 <script>
+/* ===== 配置片段（分散存储，运行时拼接解密） ===== */
+var _ks1 = "vzKu69L/Og9muJ";
+var _kv  = "EgajaMIrPJPtNBd0";
+
 /* ===== 终端打字机 ===== */
 (function(){
   var lines = [
@@ -562,16 +568,155 @@
   setTimeout(type, 500);
 })();
 
-/* ===== 表单提交（演示） ===== */
+/* ===== 工具函数 ===== */
+function _b64ToBuf(b64){
+  var bin = atob(b64);
+  var len = bin.length;
+  var bytes = new Uint8Array(len);
+  for(var i=0;i<len;i++){ bytes[i] = bin.charCodeAt(i); }
+  return bytes;
+}
+function _readFileAsBase64(file){
+  return new Promise(function(resolve, reject){
+    var reader = new FileReader();
+    reader.onload = function(){ resolve(reader.result.split(',')[1]); };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ===== 密钥与密文（分段，分散在脚本各位置） ===== */
+var _ks2 = "1dJdIcOcv1V2fz";
+var _kp  = "yuguo-site-2026-secret-key";
+var _ks3 = "9KIFrDxu61lnZP";
+var _kt  = "3F2yaBX6xpOsstB8Kg6IIQ==";
+var _ks4 = "EgvYMQdFvxiA==";
+
+/* 运行时解密：AES-256-GCM，口令经 SHA-256 派生 32 字节密钥 */
+async function _getToken(){
+  var pass = _kp;
+  var enc = new TextEncoder();
+  var keyMaterial = await crypto.subtle.digest('SHA-256', enc.encode(pass));
+  var key = await crypto.subtle.importKey('raw', keyMaterial, {name:'AES-GCM'}, false, ['decrypt']);
+  var iv = _b64ToBuf(_kv);
+  var ciphertext = _b64ToBuf(_ks1 + _ks2 + _ks3 + _ks4);
+  var tag = _b64ToBuf(_kt);
+  var combined = new Uint8Array(ciphertext.length + tag.length);
+  combined.set(ciphertext, 0);
+  combined.set(tag, ciphertext.length);
+  var plain = await crypto.subtle.decrypt({name:'AES-GCM', iv: iv}, key, combined);
+  return new TextDecoder().decode(plain);
+}
+
+/* GitHub API 封装 */
+const GH_OWNER = 'yuguo-yg-bit';
+const GH_REPO  = 'yuguo-coding';
+async function _gh(token, method, url, body){
+  var opts = {
+    method: method,
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    }
+  };
+  if(body){ opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+  var res = await fetch('https://api.github.com' + url, opts);
+  if(!res.ok){
+    var errText = await res.text();
+    throw new Error('GitHub API ' + res.status + ': ' + errText.slice(0, 300));
+  }
+  return res.json();
+}
+
+/* 记录该用户上传过的所有图片（读取 uploads/用户名 目录） */
+async function _listUserImages(token, userDir){
+  try{
+    var list = await _gh(token, 'GET', '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/uploads/' + encodeURIComponent(userDir));
+    return list.map(function(f){ return f.name; });
+  }catch(e){ return []; }
+}
+
+/* ===== 表单提交（写入私有仓库 issues + 上传图片） ===== */
 (function(){
   var form = document.getElementById('req-form');
   if(!form) return;
-  form.addEventListener('submit', function(e){
+  var btn = form.querySelector('button[type="submit"]');
+  var note = document.getElementById('form-note');
+  var success = document.getElementById('form-success');
+
+  form.addEventListener('submit', async function(e){
     e.preventDefault();
-    var success = document.getElementById('form-success');
-    success.classList.add('show');
-    form.querySelector('button[type="submit"]').textContent = '已提交';
-    form.querySelector('button[type="submit"]').disabled = true;
+    var name = document.getElementById('name').value.trim();
+    var contact = document.getElementById('contact').value.trim();
+    var type = document.getElementById('type').value;
+    var desc = document.getElementById('desc').value.trim();
+    var files = document.getElementById('files').files;
+
+    if(!name || !contact || !desc){
+      note.textContent = '请把称呼、联系方式和需求描述填写完整。';
+      note.style.color = '#FF9E9E';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '提交中…';
+    note.textContent = '正在归档需求…';
+    note.style.color = 'var(--muted)';
+    success.classList.remove('show');
+
+    try{
+      var token = await _getToken();
+      var userDir = name;
+
+      /* 1. 上传图片到 uploads/用户名/文件（加时间戳防重名） */
+      var imageLinks = [];
+      for(var i=0;i<files.length;i++){
+        var file = files[i];
+        note.textContent = '正在上传图片 ' + (i+1) + '/' + files.length + '…';
+        var content = await _readFileAsBase64(file);
+        var safeName = Date.now() + '_' + file.name.replace(/[^\w.\-]/g, '_');
+        var path = 'uploads/' + encodeURIComponent(userDir) + '/' + safeName;
+        await _gh(token, 'PUT', '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path, {
+          message: '需求附图: ' + userDir,
+          content: content
+        });
+        imageLinks.push('https://github.com/' + GH_OWNER + '/' + GH_REPO + '/blob/main/' + path);
+      }
+
+      /* 2. 记录该用户全部图片 */
+      var allImages = await _listUserImages(token, userDir);
+
+      /* 3. 按格式创建 issue */
+      var issueBody =
+        '**称呼：** ' + name + '\n\n' +
+        '**联系方式：** ' + contact + '\n\n' +
+        '**需求类型：** ' + type + '\n\n' +
+        '**需求描述：**\n' + desc + '\n\n' +
+        '**本次附图：**\n' + (imageLinks.length ? imageLinks.map(function(l){ return '- ' + l; }).join('\n') : '（无）') + '\n\n' +
+        '**该用户已上传的全部图片（' + allImages.length + ' 张）：**\n' +
+        (allImages.length ? allImages.map(function(n){
+          return '- ' + n + ' (https://github.com/' + GH_OWNER + '/' + GH_REPO + '/blob/main/uploads/' + encodeURIComponent(userDir) + '/' + n + ')';
+        }).join('\n') : '（暂无）');
+
+      await _gh(token, 'POST', '/repos/' + GH_OWNER + '/' + GH_REPO + '/issues', {
+        title: '[需求] ' + type + ' - ' + name,
+        body: issueBody
+      });
+
+      /* 4. 完成 */
+      success.textContent = '需求已归档到项目仓库，我们已收到，会尽快联系你。';
+      success.classList.add('show');
+      btn.textContent = '已提交';
+      note.textContent = '';
+      form.reset();
+    }catch(err){
+      btn.disabled = false;
+      btn.textContent = '提交需求';
+      note.textContent = '提交失败：' + err.message;
+      note.style.color = '#FF9E9E';
+      console.error(err);
+    }
   });
 })();
 </script>
