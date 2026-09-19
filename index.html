@@ -195,47 +195,45 @@
   .reveal.d4{transition-delay:.32s}
   .reveal.d5{transition-delay:.4s}
 
-  /* ===== 服务（每个卡片配对应代码终端） ===== */
+  /* ===== 服务（左简介右代码，一行一块） ===== */
   .services{background:var(--bg-2)}
-  .svc-grid{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
-  }
-  .svc-card{
+  .svc-list{display:flex;flex-direction:column;gap:26px}
+  .svc-row{
+    display:grid;grid-template-columns:0.82fr 1.18fr;gap:38px;align-items:center;
     background:var(--panel);
     border:1px solid var(--line-soft);
     border-radius:var(--radius);
-    padding:28px 26px 24px;
-    display:flex;flex-direction:column;
+    padding:34px 36px;
     transition:border-color .25s,transform .25s,box-shadow .25s;
   }
-  .svc-card:hover{
+  .svc-row:hover{
     border-color:rgba(77,141,255,.6);
-    transform:translateY(-5px);
-    box-shadow:0 18px 44px rgba(0,0,0,.45),0 0 26px rgba(77,141,255,.12);
+    transform:translateY(-4px);
+    box-shadow:0 18px 44px rgba(0,0,0,.4),0 0 26px rgba(77,141,255,.1);
   }
   .svc-icon{
-    width:46px;height:46px;border-radius:11px;
+    width:50px;height:50px;border-radius:12px;
     background:rgba(77,141,255,.12);
     border:1px solid rgba(77,141,255,.3);
     display:flex;align-items:center;justify-content:center;
-    margin-bottom:18px;color:var(--accent);
+    margin-bottom:20px;color:var(--accent);
     box-shadow:0 0 16px rgba(77,141,255,.15);
   }
-  .svc-card h3{font-size:18px;font-weight:700;margin-bottom:8px}
-  .svc-card .svc-desc{font-size:13.5px;color:var(--muted);line-height:1.7;margin-bottom:18px;min-height:46px}
+  .svc-intro h3{font-size:23px;font-weight:800;margin-bottom:10px;letter-spacing:.3px}
+  .svc-intro .svc-desc{font-size:14.5px;color:var(--muted);line-height:1.85}
 
   /* 迷你代码终端 */
   .mini-term{
-    margin-top:auto;
+    margin-top:0;
     background:#060B1D;
     border:1px solid var(--line-soft);
-    border-radius:10px;
+    border-radius:12px;
     overflow:hidden;
     font-family:var(--mono);
   }
   .mini-term-bar{
     display:flex;align-items:center;gap:6px;
-    padding:8px 12px;
+    padding:9px 14px;
     border-bottom:1px solid var(--line-soft);
     background:#081028;
   }
@@ -243,10 +241,11 @@
   .mini-term-bar .r{background:#FF5F57}.mini-term-bar .y{background:#FEBC2E}.mini-term-bar .g{background:#28C840}
   .mini-term-bar span{margin-left:6px;font-size:11px;color:var(--muted)}
   .mini-term-body{
-    padding:14px 16px 18px;
-    font-size:11.5px;line-height:1.75;
-    min-height:210px;
-    white-space:pre;
+    padding:18px 20px 22px;
+    font-size:13px;line-height:1.8;
+    min-height:240px;
+    white-space:pre-wrap;
+    word-break:break-all;
     overflow:hidden;
     color:#C6D4F8;
   }
@@ -261,6 +260,89 @@
     box-shadow:0 0 8px var(--cyan);
     animation:blink .9s steps(2) infinite;
   }
+
+  /* ===== 数据统计 ===== */
+  .stats{background:var(--bg)}
+  .stats-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  }
+  .stat{
+    background:var(--panel);
+    border:1px solid var(--line-soft);
+    border-radius:var(--radius);
+    padding:38px 30px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .stat::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--accent),var(--cyan));
+    opacity:.7;
+  }
+  .stat-num{
+    font-family:var(--mono);
+    font-size:56px;font-weight:600;
+    color:var(--text);
+    letter-spacing:1px;
+    line-height:1.1;
+    text-shadow:0 0 24px rgba(77,141,255,.35);
+  }
+  .stat-num em{
+    font-style:normal;color:var(--accent);
+    font-size:34px;
+  }
+  .stat-label{
+    margin-top:14px;
+    font-size:15px;color:var(--muted);
+    letter-spacing:2px;
+  }
+  .stats-note{
+    margin-top:20px;text-align:center;
+    font-family:var(--mono);font-size:12.5px;color:var(--muted);
+  }
+
+  /* ===== 荣誉证书 ===== */
+  .honors{background:var(--bg-2)}
+  .honor-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  }
+  .honor-card{
+    background:var(--panel);
+    border:1px solid var(--line-soft);
+    border-radius:var(--radius);
+    padding:26px;
+    transition:border-color .25s,transform .25s,box-shadow .25s;
+  }
+  .honor-card:hover{
+    border-color:rgba(77,141,255,.6);
+    transform:translateY(-4px);
+    box-shadow:0 18px 44px rgba(0,0,0,.4),0 0 26px rgba(77,141,255,.1);
+  }
+  .honor-card.wide{grid-column:span 2}
+  .honor-tag{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--mono);font-size:12px;color:var(--cyan);
+    border:1px solid rgba(53,214,245,.3);
+    background:rgba(53,214,245,.07);
+    padding:4px 10px;border-radius:999px;
+    margin-bottom:16px;
+  }
+  .honor-ph{
+    height:150px;
+    border:1px dashed rgba(77,141,255,.45);
+    border-radius:10px;
+    background:rgba(77,141,255,.06);
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;gap:8px;
+    color:var(--muted);font-size:13.5px;
+    margin-bottom:16px;
+    text-align:center;
+    padding:12px;
+  }
+  .honor-ph svg{color:var(--accent);opacity:.7}
+  .honor-card h3{font-size:16.5px;font-weight:700;margin-bottom:6px}
+  .honor-card p{font-size:13px;color:var(--muted);line-height:1.6}
 
   /* ===== 流程 ===== */
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
@@ -341,20 +423,23 @@
   @media (max-width:900px){
     .hero{padding:84px 0 96px}
     .hero h1{font-size:54px;letter-spacing:2px}
-    .svc-grid{grid-template-columns:repeat(2,1fr)}
+    .svc-row{grid-template-columns:1fr;gap:24px;padding:28px 26px}
     .steps{grid-template-columns:repeat(2,1fr)}
     .step::before{display:none}
     .inq-grid{grid-template-columns:1fr}
+    .stats-grid{grid-template-columns:1fr}
+    .honor-grid{grid-template-columns:1fr}
+    .honor-card.wide{grid-column:span 1}
   }
   @media (max-width:600px){
     .nav-links{display:none}
-    .svc-grid{grid-template-columns:1fr}
     .steps{grid-template-columns:1fr}
     .hero h1{font-size:40px}
     .sec-head h2{font-size:27px}
     .inq-left h2{font-size:27px}
     .hero-slogan{font-size:16px}
     .form{padding:26px 20px}
+    .stat-num{font-size:44px}
   }
 </style>
 </head>
@@ -380,8 +465,8 @@
 <section class="hero" id="top">
   <div class="hero-bg"></div>
   <div class="wrap hero-inner">
-    <span class="eyebrow">代码开发 · 项目承接</span>
-    <h1>玉国承接代码</h1>
+    <span class="eyebrow">代码承接中心</span>
+    <h1>玉国代码</h1>
     <div class="hero-slogans">
       <span class="hero-slogan"><i class="dot"></i>复杂需求放心交付</span>
       <span class="hero-slogan"><i class="dot"></i>网站 · 小程序 · 系统定制</span>
@@ -407,80 +492,171 @@
       <h2>我们承接哪些代码开发</h2>
       <p>一个需求对应一个方案，按项目报价，开发过程保持沟通透明。往下看，每一类服务我们都亲手敲给你看。</p>
     </div>
-    <div class="svc-grid">
+    <div class="svc-list">
 
-      <div class="svc-card reveal d1">
-        <div class="svc-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 9l-2 3 2 3M13 15h3"/></svg>
+      <div class="svc-row reveal d1">
+        <div class="svc-intro">
+          <div class="svc-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 9l-2 3 2 3M13 15h3"/></svg>
+          </div>
+          <h3>网站 / Web 应用</h3>
+          <p class="svc-desc">企业官网、展示页、后台管理系统，前端界面与后端逻辑一起交付。包括安全中间件、数据库查询、接口鉴权与限流，一套完整可上线的服务端代码。</p>
         </div>
-        <h3>网站 / Web 应用</h3>
-        <p class="svc-desc">企业官网、展示页、后台管理系统，前端界面与后端逻辑一起交付。</p>
         <div class="mini-term">
           <div class="mini-term-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>web-server.js</span></div>
           <div class="mini-term-body" data-code="web"></div>
         </div>
       </div>
 
-      <div class="svc-card reveal d2">
-        <div class="svc-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg>
+      <div class="svc-row reveal d2">
+        <div class="svc-intro">
+          <div class="svc-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg>
+          </div>
+          <h3>小程序 / H5</h3>
+          <p class="svc-desc">微信小程序、移动端 H5 页面，适配手机端的轻量应用开发。分页加载、下拉刷新、防重复请求，移动端体验的细节我们都处理好。</p>
         </div>
-        <h3>小程序 / H5</h3>
-        <p class="svc-desc">微信小程序、移动端 H5 页面，适配手机端的轻量应用开发。</p>
         <div class="mini-term">
           <div class="mini-term-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>app.js</span></div>
           <div class="mini-term-body" data-code="mini"></div>
         </div>
       </div>
 
-      <div class="svc-card reveal d3">
-        <div class="svc-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
+      <div class="svc-row reveal d3">
+        <div class="svc-intro">
+          <div class="svc-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
+          </div>
+          <h3>脚本与自动化工具</h3>
+          <p class="svc-desc">数据处理脚本、文件批量处理、自动化工作流，把重复劳动交给代码。批量重命名、目录整理、文件归档，一键跑完。</p>
         </div>
-        <h3>脚本与自动化工具</h3>
-        <p class="svc-desc">数据处理脚本、文件批量处理、自动化工作流，把重复劳动交给代码。</p>
         <div class="mini-term">
           <div class="mini-term-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>batch.js</span></div>
           <div class="mini-term-body" data-code="script"></div>
         </div>
       </div>
 
-      <div class="svc-card reveal d1">
-        <div class="svc-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      <div class="svc-row reveal d1">
+        <div class="svc-intro">
+          <div class="svc-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <h3>桌面 / 系统工具</h3>
+          <p class="svc-desc">按需定制的桌面小工具、系统辅助程序，解决特定场景的实际问题。主进程与界面分离，数据导出、系统交互一气呵成。</p>
         </div>
-        <h3>桌面 / 系统工具</h3>
-        <p class="svc-desc">按需定制的桌面小工具、系统辅助程序，解决特定场景的实际问题。</p>
         <div class="mini-term">
           <div class="mini-term-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>desktop.js</span></div>
           <div class="mini-term-body" data-code="desktop"></div>
         </div>
       </div>
 
-      <div class="svc-card reveal d2">
-        <div class="svc-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l3 3-3 3M13 15h4M3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/></svg>
+      <div class="svc-row reveal d2">
+        <div class="svc-intro">
+          <div class="svc-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l3 3-3 3M13 15h4M3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/></svg>
+          </div>
+          <h3>API 与数据接口</h3>
+          <p class="svc-desc">接口开发、数据对接、爬虫与数据整理，让不同系统之间顺畅协作。抓取、清洗、限流、聚合，一条链路的工程化实现。</p>
         </div>
-        <h3>API 与数据接口</h3>
-        <p class="svc-desc">接口开发、数据对接、爬虫与数据整理，让不同系统之间顺畅协作。</p>
         <div class="mini-term">
           <div class="mini-term-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>api-gateway.js</span></div>
           <div class="mini-term-body" data-code="api"></div>
         </div>
       </div>
 
-      <div class="svc-card reveal d3">
-        <div class="svc-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.5"/></svg>
+      <div class="svc-row reveal d3">
+        <div class="svc-intro">
+          <div class="svc-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.5"/></svg>
+          </div>
+          <h3>定制开发</h3>
+          <p class="svc-desc">说不清类别？直接把想法讲给我们，一起评估可行性和方案。并发控制、重试机制、任务队列，复杂逻辑也能拆得清清楚楚。</p>
         </div>
-        <h3>定制开发</h3>
-        <p class="svc-desc">说不清类别？直接把想法讲给我们，一起评估可行性和方案。</p>
         <div class="mini-term">
           <div class="mini-term-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>custom.js</span></div>
           <div class="mini-term-body" data-code="custom"></div>
         </div>
       </div>
 
+    </div>
+  </div>
+</section>
+
+<!-- ===== 数据统计 ===== -->
+<section class="section stats" id="stats">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag">By the numbers</span>
+      <h2>数字说明实力</h2>
+      <p>用真实的数字，让每一个客户放心把代码交给我们。</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat reveal d1">
+        <div class="stat-num"><span class="count" data-target="0">0</span><em>+</em></div>
+        <div class="stat-label">服务客户</div>
+      </div>
+      <div class="stat reveal d2">
+        <div class="stat-num"><span class="count" data-target="0">0</span><em>+</em></div>
+        <div class="stat-label">交付需求</div>
+      </div>
+      <div class="stat reveal d3">
+        <div class="stat-num"><span class="count" data-target="0">0</span><em>+</em></div>
+        <div class="stat-label">代码行数</div>
+      </div>
+    </div>
+    <div class="stats-note reveal">/* 数据占位，待更新 */</div>
+  </div>
+</section>
+
+<!-- ===== 荣誉证书 ===== -->
+<section class="section honors" id="honors">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag">Honors &amp; Certificates</span>
+      <h2>荣誉与资质</h2>
+      <p>每一张证书，都是对玉国代码专业能力的一份认可。</p>
+    </div>
+    <div class="honor-grid">
+      <div class="honor-card reveal d1">
+        <span class="honor-tag">前端</span>
+        <div class="honor-ph">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5a2 2 0 0 0-2.8 0L6 20"/></svg>
+          奖状图片占位
+          <small>待提供证书图片</small>
+        </div>
+        <h3>前端开发奖状</h3>
+        <p>前端技术能力的行业认可，图片待补充。</p>
+      </div>
+      <div class="honor-card reveal d2">
+        <span class="honor-tag">前端</span>
+        <div class="honor-ph">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5a2 2 0 0 0-2.8 0L6 20"/></svg>
+          奖状图片占位
+          <small>待提供证书图片</small>
+        </div>
+        <h3>前端开发奖状</h3>
+        <p>前端技术能力的行业认可，图片待补充。</p>
+      </div>
+      <div class="honor-card reveal d3">
+        <span class="honor-tag">前端</span>
+        <div class="honor-ph">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5a2 2 0 0 0-2.8 0L6 20"/></svg>
+          奖状图片占位
+          <small>待提供证书图片</small>
+        </div>
+        <h3>前端开发奖状</h3>
+        <p>前端技术能力的行业认可，图片待补充。</p>
+      </div>
+      <div class="honor-card wide reveal d1">
+        <span class="honor-tag">后端 · 国家级</span>
+        <div class="honor-ph">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5a2 2 0 0 0-2.8 0L6 20"/></svg>
+          国家级证书图片占位
+          <small>待提供证书图片</small>
+        </div>
+        <h3>国家级资质证书</h3>
+        <p>国家级认证，代表玉国代码后端研发实力的权威背书，图片待补充。</p>
+      </div>
     </div>
   </div>
 </section>
@@ -761,12 +937,12 @@ var CODE_BLOCKS = {
   ]
 };
 
-/* 代码高亮输出（分段渲染，按进度） */
+/* 代码高亮输出（分段渲染，按进度，每行末尾加换行符） */
 function renderCode(el, segs, seg, char){
   var html = '';
   for(var i=0;i<segs.length;i++){
     if(i < seg){
-      html += '<span class="'+segs[i][0]+'">'+segs[i][1]+'</span>';
+      html += '<span class="'+segs[i][0]+'">'+segs[i][1]+'</span>\n';
     } else if(i === seg){
       html += '<span class="'+segs[i][0]+'">'+segs[i][1].slice(0,char)+'</span>';
     }
@@ -822,6 +998,38 @@ function typeCode(el, segs, callback){
     });
   }, {threshold:.3});
   bodies.forEach(function(el){ io.observe(el); });
+})();
+
+/* ===== 统计数字滚动计数 ===== */
+(function(){
+  var counters = document.querySelectorAll('.count');
+  if(!counters.length) return;
+  function animate(el){
+    var target = parseInt(el.getAttribute('data-target'), 10) || 0;
+    if(target <= 0){ el.textContent = '0'; return; }
+    var dur = 1600, start = null;
+    function tick(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased).toLocaleString('en-US');
+      if(p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  if(!('IntersectionObserver' in window)){
+    counters.forEach(animate);
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        animate(en.target);
+        io.unobserve(en.target);
+      }
+    });
+  }, {threshold:.5});
+  counters.forEach(function(el){ io.observe(el); });
 })();
 
 /* ===== 工具函数 ===== */
