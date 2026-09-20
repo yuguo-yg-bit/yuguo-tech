@@ -1,15 +1,49 @@
 /* ==========================================================================
  * admin.js — 管理员后台
- * 密码:27015150111(明文存于 sessionStorage,仅防普通用户误入)
+ * 密码:27015150111(运行时 AES-256-GCM 解密验证)
  * 全权限:创建用户/审批申请/手动建项目/修改任意 JSON
  * ========================================================================== */
 
 (function(){
   'use strict';
 
-  const ADMIN_PWD   = '27015150111';
+  /* ===== 管理员密码(AES-256-GCM 加密,运行时解密) ===== */
+  /* IV */
+  var _kv = "EgajaMIrPJPtNBd0";
+  /* 密文片段(拼接后 = ciphertext+tag) */
+  var _k1 = "6m3uhaCrXXUg284MbXMp";
+  var _k2 = "vN+DDp6aEFo9xPgj";
+  /* tag */
+  var _kt = "DG1zKbzfgw6emhBaPcT4Iw==";
+  /* 口令(与 github-api.js 用同一个) */
+  var _kp = "yuguo-site-2026-secret-key";
+
+  /* base64 → Uint8Array */
+  function _b64ToBuf(b64){
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++){ bytes[i] = bin.charCodeAt(i); }
+    return bytes;
+  }
+
+  /* 运行时解密管理员密码 */
+  async function _getAdminPwd(){
+    var enc = new TextEncoder();
+    var keyMaterial = await crypto.subtle.digest('SHA-256', enc.encode(_kp));
+    var key = await crypto.subtle.importKey('raw', keyMaterial, {name:'AES-GCM'}, false, ['decrypt']);
+    var iv = _b64ToBuf(_kv);
+    var ciphertext = _b64ToBuf(_k1 + _k2);
+    var tag = _b64ToBuf(_kt);
+    var combined = new Uint8Array(ciphertext.length + tag.length);
+    combined.set(ciphertext, 0);
+    combined.set(tag, ciphertext.length);
+    var plain = await crypto.subtle.decrypt({name:'AES-GCM', iv: iv}, key, combined);
+    return new TextDecoder().decode(plain);
+  }
+
   const SESSION_KEY = 'yuguo_admin_session';
-  const SESSION_VAL = 'admin_ok_' + ADMIN_PWD.slice(-6);
+  var ADMIN_PWD = null; /* 运行时解密后赋值 */
+  var SESSION_VAL = null;
 
   /* ===== 登录 ===== */
   const loginPage  = document.getElementById('login-page');
@@ -19,14 +53,22 @@
   const loginBtn   = document.getElementById('login-btn');
   const loginMsg   = document.getElementById('login-msg');
 
+  async function initAdmin(){
+    ADMIN_PWD = await _getAdminPwd();
+    SESSION_VAL = 'admin_ok_' + ADMIN_PWD.slice(-6);
+    checkSession();
+  }
+
   function checkSession(){
+    if(!SESSION_VAL) return; /* 还没解密 */
     if(sessionStorage.getItem(SESSION_KEY) === SESSION_VAL){
       showAdmin();
     }
   }
 
-  loginForm.addEventListener('submit', function(e){
+  loginForm.addEventListener('submit', async function(e){
     e.preventDefault();
+    if(!ADMIN_PWD){ loginMsg.textContent = '初始化中…稍等'; return; }
     if(loginPwd.value === ADMIN_PWD){
       sessionStorage.setItem(SESSION_KEY, SESSION_VAL);
       loginMsg.textContent = '';
@@ -45,7 +87,6 @@
     adminPage.classList.remove('show');
     loginPage.style.display = 'flex';
     loginPwd.value = '';
-    /* 清空数据 */
     cache = { token:null, users:[], applications:[], projects:[] };
   });
 
@@ -202,6 +243,8 @@
     }catch(err){
       console.error(err);
       setSync('users', 'error', '加载失败: ' + err.message);
+      /* 直接弹出来方便调试 */
+      toast('⚠️ API 错误: ' + err.message + '\n\n如果是 401/403 说明 token 无效或被 revoke', 'err');
       if(/401|403/.test(err.message)){ cache.token = null; }
     }
   }
@@ -741,6 +784,6 @@
   }
 
   /* ===== 启动 ===== */
-  checkSession();
+  initAdmin();
 
 })();
