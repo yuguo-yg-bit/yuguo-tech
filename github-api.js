@@ -6,7 +6,7 @@
 
 (function(){
   const GH_OWNER = 'yuguo-yg-bit';
-  const GH_REPO  = 'yuguo-coding';
+  const GH_REPO  = 'yuguo-coding'; // 数据仓库(后端),含 users/ 目录
 
   /* ===== 密钥片段(与 login.html / index.html 同步) ===== */
   var _ks1 = "vzKu69L/Og9muJ";
