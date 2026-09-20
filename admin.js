@@ -184,12 +184,18 @@
 
   /* ===== 加载全部数据 ===== */
   async function loadAll(){
+    console.log('[Admin] 开始加载数据, repo: yuguo-coding');
     try{
-      if(!cache.token) cache.token = await YG.getToken();
-      const phone = YG ? null : null; // just for reference
+      if(!cache.token) {
+        console.log('[Admin] 正在解密 token...');
+        cache.token = await YG.getToken();
+        console.log('[Admin] token 解密成功,前缀:', cache.token.slice(0,4));
+      }
 
       /* 拉所有用户目录 */
-      const userDirs = await YG.ghListDir(cache.token, 'users').catch(function(){ return []; });
+      console.log('[Admin] 正在请求 GET /repos/yuguo-yg-bit/yuguo-coding/contents/users');
+      const userDirs = await YG.ghListDir(cache.token, 'users');
+      console.log('[Admin] userDirs 返回:', userDirs);
       const users = [];
       for(let i=0;i<userDirs.length;i++){
         if(userDirs[i].type !== 'dir') continue;
@@ -241,11 +247,12 @@
       setSync('apps', '', t);
 
     }catch(err){
-      console.error(err);
-      setSync('users', 'error', '加载失败: ' + err.message);
-      /* 直接弹出来方便调试 */
-      toast('⚠️ API 错误: ' + err.message + '\n\n如果是 401/403 说明 token 无效或被 revoke', 'err');
-      if(/401|403/.test(err.message)){ cache.token = null; }
+      console.error('YG loadAll error:', err);
+      setSync('users', 'error', '加载失败');
+      /* 把错误信息详细打出来方便调试 */
+      var msg = err.message || String(err);
+      toast('⚠️ 加载失败: ' + msg.slice(0, 200), 'err');
+      if(/401|403|Token revoked/.test(msg)){ cache.token = null; }
     }
   }
 
