@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玉国代码 — 管理员后台</title>
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#050A18;--bg-2:#081026;--panel:#0B1530;--panel-2:#0A1228;
+    --line:#16244A;--line-soft:#101C3D;--text:#E8EEFF;--muted:#8FA3D8;
+    --accent:#4D8DFF;--accent-deep:#2E6BFF;--cyan:#35D6F5;
+    --purple:#A78BFA;--green:#34D399;--orange:#FFA94D;--red:#FF6B6B;
+    --gray:#6B7280;--radius:14px;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;display:flex;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}button{font-family:inherit}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+  /* ===== 登录页 ===== */
+  .login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  .login-box{
+    width:100%;max-width:380px;
+    background:linear-gradient(160deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line-soft);border-radius:18px;
+    padding:44px 36px;
+    box-shadow:0 24px 60px rgba(0,0,0,.5);
+  }
+  .login-box .logo{
+    display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px;margin-bottom:36px;
+  }
+  .login-box .logo-mark{
+    width:40px;height:40px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+    display:flex;align-items:center;justify-content:center;
+    color:#061030;font-family:var(--mono);font-weight:700;font-size:16px;
+  }
+  .login-box h2{font-size:22px;font-weight:900;margin-bottom:6px}
+  .login-box .sub{font-family:var(--mono);font-size:12px;color:var(--cyan);margin-bottom:28px}
+  .field{margin-bottom:18px}
+  .field label{display:block;font-size:13.5px;font-weight:600;margin-bottom:8px}
+  .field input{
+    width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    color:var(--text);font-family:var(--sans);font-size:15px;
+    padding:12px 15px;outline:none;transition:border-color .2s;
+  }
+  .field input:focus{border-color:var(--accent)}
+  .btn{
+    width:100%;padding:13px;border-radius:10px;border:none;
+    font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+    color:#04102E;
+  }
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(77,141,255,.4)}
+  .btn-primary:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+  .msg{font-size:13px;margin-top:12px;min-height:18px}
+  .msg.err{color:#FF9E8E}.msg.ok{color:var(--cyan)}
+
+  /* ===== 管理后台(默认隐藏) ===== */
+  .admin-wrap{display:none;width:100%;min-height:100vh}
+  .admin-wrap.show{display:flex}
+
+  .sidebar{
+    width:270px;flex:none;background:var(--bg-2);
+    border-right:1px solid var(--line-soft);
+    padding:28px 22px;display:flex;flex-direction:column;
+    position:sticky;top:0;height:100vh;
+  }
+  .sidebar .logo{
+    display:flex;align-items:center;gap:10px;font-weight:900;font-size:17px;margin-bottom:32px;
+  }
+  .sidebar .logo-mark{
+    width:34px;height:34px;border-radius:9px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+    display:flex;align-items:center;justify-content:center;
+    color:#061030;font-family:var(--mono);font-weight:700;font-size:14px;
+  }
+  .admin-tag{
+    font-family:var(--mono);font-size:11px;color:var(--red);
+    border:1px solid rgba(255,107,107,.3);background:rgba(255,107,107,.08);
+    padding:3px 9px;border-radius:999px;margin-bottom:24px;display:inline-block;
+  }
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+  .stat-card{
+    background:var(--panel);border:1px solid var(--line-soft);
+    border-radius:12px;padding:14px 12px;text-align:center;
+  }
+  .stat-card .num{font-size:26px;font-weight:900;font-family:var(--mono);color:var(--accent)}
+  .stat-card .lbl{font-size:12px;color:var(--muted);margin-top:4px}
+  .nav{display:flex;flex-direction:column;gap:4px;flex:1}
+  .nav a{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 14px;border-radius:9px;
+    font-size:14px;color:var(--muted);transition:all .2s;cursor:pointer;border:none;background:transparent;width:100%;text-align:left;
+  }
+  .nav a:hover{background:var(--panel);color:var(--text)}
+  .nav a.active{background:linear-gradient(135deg,rgba(77,141,255,.2),rgba(46,107,255,.12));color:var(--accent)}
+  .logout-btn{
+    padding:10px 14px;border-radius:9px;font-size:14px;color:var(--muted);
+    border:1px solid var(--line-soft);background:transparent;cursor:pointer;transition:all .2s;width:100%;text-align:left;display:flex;align-items:center;gap:10px;
+  }
+  .logout-btn:hover{border-color:var(--red);color:#FF9E9E}
+
+  /* ===== 主区 ===== */
+  .main{flex:1;padding:36px 44px 80px;overflow-y:auto}
+  .page-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:14px}
+  .page-head h1{font-size:26px;font-weight:900}
+  .page-head .info{font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
+  .sync-dot.syncing{background:var(--orange);box-shadow:0 0 6px var(--orange);animation:pulse 1s infinite}
+  .sync-dot.error{background:var(--red);box-shadow:0 0 6px var(--red)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  /* 工具栏 */
+  .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+  .toolbar .search{
+    flex:1;min-width:200px;background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    color:var(--text);font-family:var(--sans);font-size:14px;
+    padding:10px 14px;outline:none;transition:border-color .2s;
+  }
+  .toolbar .search:focus{border-color:var(--accent)}
+  .btn-sm{
+    padding:9px 16px;border-radius:9px;border:none;
+    font-size:13.5px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;
+  }
+  .btn-sm-blue{background:var(--accent);color:#04102E}
+  .btn-sm-blue:hover{box-shadow:0 4px 12px rgba(77,141,255,.35);transform:translateY(-1px)}
+  .btn-sm-ghost{background:transparent;border:1px solid var(--line-soft);color:var(--muted)}
+  .btn-sm-ghost:hover{border-color:var(--line);color:var(--text)}
+  .btn-sm-red{background:transparent;border:1px solid rgba(255,107,107,.3);color:var(--red)}
+  .btn-sm-red:hover{border-color:var(--red);background:rgba(255,107,107,.08)}
+  .btn-sm-green{background:var(--green);color:#04102E}
+  .btn-sm-green:hover{box-shadow:0 4px 12px rgba(52,211,153,.35);transform:translateY(-1px)}
+
+  /* 表格 */
+  .table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--line-soft)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead tr{background:var(--panel-2)}
+  th{
+    padding:13px 16px;text-align:left;font-family:var(--mono);font-size:12px;
+    font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;
+    border-bottom:1px solid var(--line-soft);white-space:nowrap;
+  }
+  td{
+    padding:13px 16px;border-bottom:1px solid var(--line-soft);vertical-align:middle;
+    max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  tbody tr:hover{background:rgba(77,141,255,.04)}
+  tbody tr:last-child td{border-bottom:none}
+  .badge{
+    display:inline-block;font-family:var(--mono);font-size:11.5px;font-weight:600;
+    padding:3px 9px;border-radius:999px;
+  }
+  .badge-green{color:#34D399;border:1px solid rgba(52,211,153,.3);background:rgba(52,211,153,.08)}
+  .badge-orange{color:#FFA94D;border:1px solid rgba(255,169,77,.3);background:rgba(255,169,77,.08)}
+  .badge-blue{color:#4D8DFF;border:1px solid rgba(77,141,255,.3);background:rgba(77,141,255,.08)}
+  .badge-purple{color:#A78BFA;border:1px solid rgba(167,139,250,.3);background:rgba(167,139,250,.08)}
+  .badge-cyan{color:#35D6F5;border:1px solid rgba(53,214,245,.3);background:rgba(53,214,245,.08)}
+  .badge-gray{color:#6B7280;border:1px solid rgba(107,114,128,.3);background:rgba(107,114,128,.08)}
+  .badge-red{color:#FF6B6B;border:1px solid rgba(255,107,107,.3);background:rgba(255,107,107,.08)}
+  .actions{display:flex;gap:6px;flex-wrap:nowrap}
+  .cell-phone{font-family:var(--mono);font-size:13px}
+  .cell-time{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+  /* 空状态 */
+  .empty{
+    text-align:center;padding:80px 40px;
+    border:1px dashed rgba(77,141,255,.3);border-radius:var(--radius);
+    background:rgba(77,141,255,.04);
+  }
+  .empty .icon{font-family:var(--mono);font-size:56px;color:var(--accent);opacity:.4;margin-bottom:14px;line-height:1}
+  .empty p{font-size:14px;color:var(--muted)}
+
+  /* 模态 */
+  .modal-overlay{
+    position:fixed;inset:0;z-index:60;
+    background:rgba(5,10,24,.8);backdrop-filter:blur(6px);
+    display:none;align-items:center;justify-content:center;padding:20px;
+  }
+  .modal-overlay.show{display:flex;animation:fadeIn .2s}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .modal{
+    background:var(--bg-2);border:1px solid var(--line);
+    border-radius:16px;width:100%;max-width:520px;max-height:90vh;
+    display:flex;flex-direction:column;
+    box-shadow:0 24px 60px rgba(0,0,0,.6);
+    animation:slideUp .25s cubic-bezier(.2,.7,.2,1);
+  }
+  @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .modal-head{
+    padding:20px 24px 14px;border-bottom:1px solid var(--line-soft);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .modal-head h3{font-size:18px;font-weight:900}
+  .modal-head .sub{font-family:var(--mono);font-size:12px;color:var(--cyan);margin-top:4px}
+  .modal-close{
+    width:32px;height:32px;border-radius:8px;background:transparent;
+    border:1px solid var(--line-soft);color:var(--muted);font-size:17px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;
+  }
+  .modal-close:hover{border-color:var(--red);color:var(--red)}
+  .modal-body{padding:20px 24px;overflow-y:auto;flex:1}
+  .modal-foot{
+    padding:14px 24px;border-top:1px solid var(--line-soft);
+    display:flex;justify-content:flex-end;gap:10px;
+  }
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:13.5px;font-weight:600;margin-bottom:7px}
+  .field input,.field textarea,.field select{
+    width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;
+    color:var(--text);font-family:var(--sans);font-size:14px;
+    padding:10px 13px;outline:none;transition:border-color .2s;
+  }
+  .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent)}
+  .field textarea{resize:vertical;min-height:90px;line-height:1.6}
+  .field select{appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238FA3D8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px}
+  .field select option{background:var(--panel)}
+  .field .hint{font-size:12px;color:var(--muted);margin-top:6px}
+  .field input[type="file"]{font-size:13px;padding:8px 0}
+  .field input[type="file"]::file-selector-button{
+    margin-right:10px;padding:5px 11px;
+    background:var(--panel);border:1px solid var(--line);
+    color:var(--text);border-radius:7px;cursor:pointer;font-family:var(--sans);font-size:13px;
+  }
+  .modal-progress{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-top:8px;min-height:18px}
+  .modal-progress.err{color:#FF9E8E}.modal-progress.ok{color:var(--cyan)}
+
+  .toast{
+    position:fixed;top:22px;left:50%;transform:translateX(-50%) translateY(-20px);
+    background:var(--panel);border:1px solid var(--cyan);color:var(--cyan);
+    padding:10px 22px;border-radius:10px;font-size:14px;font-weight:600;
+    z-index:200;opacity:0;transition:opacity .25s,transform .25s;
+    box-shadow:0 8px 24px rgba(0,0,0,.4);
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.err{border-color:var(--red);color:#FF9E8E}
+  .toast.warn{border-color:var(--orange);color:#FFA94D}
+
+  /* 确认框 */
+  .confirm-box{
+    background:var(--bg-2);border:1px solid var(--line);
+    border-radius:16px;width:100%;max-width:380px;
+    padding:32px 28px;text-align:center;
+    box-shadow:0 24px 60px rgba(0,0,0,.6);
+  }
+  .confirm-box .icon{font-size:44px;margin-bottom:14px}
+  .confirm-box h3{font-size:18px;font-weight:900;margin-bottom:8px}
+  .confirm-box p{font-size:14px;color:var(--muted);margin-bottom:24px}
+  .confirm-box .btns{display:flex;gap:10px}
+  .confirm-box .btns button{flex:1;padding:11px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+
+  @media(max-width:900px){
+    .sidebar{width:220px;padding:22px 16px}
+    .main{padding:28px 28px 60px}
+  }
+  @media(max-width:700px){
+    .admin-wrap{flex-direction:column}
+    .sidebar{width:100%;flex-direction:row;align-items:center;padding:14px 16px;height:auto;position:static;gap:12px;flex-wrap:wrap}
+    .sidebar .logo{margin-bottom:0;margin-right:10px}
+    .stat-grid{display:none}.admin-tag{display:none}
+    .nav{display:none}
+    .main{padding:22px 18px 60px}
+    .page-head h1{font-size:22px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== 登录页 ===== -->
+<div class="login-wrap" id="login-page">
+  <div class="login-box">
+    <div class="logo">
+      <span class="logo-mark">&lt;/&gt;</span>
+      <span>玉国代码</span>
+    </div>
+    <h2>管理员登录</h2>
+    <div class="sub">// admin access only</div>
+    <form id="login-form">
+      <div class="field">
+        <label>管理员密码</label>
+        <input type="password" id="login-pwd" placeholder="输入管理员密码" autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary" id="login-btn">进入后台</button>
+      <div class="msg" id="login-msg"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== 管理后台 ===== -->
+<div class="admin-wrap" id="admin-page">
+
+  <!-- 侧栏 -->
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="logo-mark">&lt;/&gt;</span>
+      <span>玉国代码</span>
+    </div>
+    <span class="admin-tag">// 管理员后台</span>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="num" id="stat-users">—</div><div class="lbl">注册用户</div></div>
+      <div class="stat-card"><div class="num" id="stat-apps">—</div><div class="lbl">待处理申请</div></div>
+      <div class="stat-card"><div class="num" id="stat-projects">—</div><div class="lbl">项目总数</div></div>
+      <div class="stat-card"><div class="num" id="stat-rejected">—</div><div class="lbl">已驳回</div></div>
+    </div>
+
+    <nav class="nav">
+      <a href="#" class="active" data-page="users">👥 用户管理</a>
+      <a href="#" data-page="applications">📋 申请审批</a>
+      <a href="#" data-page="new-project">➕ 手动建项目</a>
+    </nav>
+
+    <button class="logout-btn" id="logout-btn">← 退出登录</button>
+  </aside>
+
+  <!-- 主区 -->
+  <main class="main">
+
+    <!-- 用户管理 -->
+    <div id="page-users">
+      <div class="page-head">
+        <h1>用户管理</h1>
+        <div class="info"><span class="sync-dot" id="sync-dot-users"></span><span id="sync-text-users">—</span></div>
+      </div>
+      <div class="toolbar">
+        <input class="search" id="search-users" placeholder="搜索手机号…" oninput="renderUsers()">
+        <button class="btn-sm btn-sm-blue" onclick="openNewUser()">➕ 新建用户</button>
+      </div>
+      <div id="users-area"></div>
+    </div>
+
+    <!-- 申请审批 -->
+    <div id="page-applications" style="display:none">
+      <div class="page-head">
+        <h1>申请审批</h1>
+        <div class="info"><span class="sync-dot" id="sync-dot-apps"></span><span id="sync-text-apps">—</span></div>
+      </div>
+      <div class="toolbar">
+        <button class="btn-sm btn-sm-ghost active" data-filter="pending" onclick="setFilter(this,'applications')">待处理</button>
+        <button class="btn-sm btn-sm-ghost" data-filter="approved" onclick="setFilter(this,'applications')">已通过</button>
+        <button class="btn-sm btn-sm-ghost" data-filter="rejected" onclick="setFilter(this,'applications')">已驳回</button>
+        <button class="btn-sm btn-sm-ghost" data-filter="all" onclick="setFilter(this,'applications')">全部</button>
+      </div>
+      <div id="apps-area"></div>
+    </div>
+
+    <!-- 手动建项目 -->
+    <div id="page-new-project" style="display:none">
+      <div class="page-head">
+        <h1>手动创建项目</h1>
+        <div class="info">直接为用户创建正式项目(绕过申请流程)</div>
+      </div>
+      <div class="toolbar">
+        <button class="btn-sm btn-sm-blue" onclick="openNewProject()">➕ 新建项目</button>
+      </div>
+      <div id="new-project-list"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- 模态:新建用户 -->
+<div class="modal-overlay" id="modal-new-user">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h3>新建用户</h3><div class="sub">// create user</div></div>
+      <button class="modal-close" onclick="closeModal('modal-new-user')">×</button>
+    </div>
+    <form id="form-new-user">
+      <div class="modal-body">
+        <div class="field">
+          <label>手机号 <span style="color:var(--red)">*</span></label>
+          <input type="tel" id="nu-phone" maxlength="11" placeholder="11 位手机号" required>
+          <div class="hint">作为用户唯一标识,登录凭证</div>
+        </div>
+        <div class="field">
+          <label>初始密码 <span style="color:var(--red)">*</span></label>
+          <input type="text" id="nu-pwd" minlength="6" placeholder="至少 6 位" required>
+          <div class="hint">创建后可告知用户修改</div>
+        </div>
+        <div class="modal-progress" id="nu-progress"></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-sm btn-sm-ghost" onclick="closeModal('modal-new-user')">取消</button>
+        <button type="submit" class="btn-sm btn-sm-blue" id="nu-submit">创建用户</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 模态:审批申请 -->
+<div class="modal-overlay" id="modal-review">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-head">
+      <div><h3>审批申请</h3><div class="sub" id="review-title">// review application</div></div>
+      <button class="modal-close" onclick="closeModal('modal-review')">×</button>
+    </div>
+    <div class="modal-body" id="review-body"></div>
+    <div class="modal-foot">
+      <button class="btn-sm btn-sm-red" id="btn-reject" onclick="doReject()">驳回</button>
+      <button class="btn-sm btn-sm-green" id="btn-approve" onclick="doApprove()">通过并创建项目</button>
+    </div>
+  </div>
+</div>
+
+<!-- 模态:新建项目 -->
+<div class="modal-overlay" id="modal-new-project">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-head">
+      <div><h3>手动创建项目</h3><div class="sub">// create project manually</div></div>
+      <button class="modal-close" onclick="closeModal('modal-new-project')">×</button>
+    </div>
+    <form id="form-new-project">
+      <div class="modal-body">
+        <div class="field">
+          <label>用户手机号 <span style="color:var(--red)">*</span></label>
+          <input type="tel" id="np-phone" maxlength="11" placeholder="用户的登录手机号" required>
+        </div>
+        <div class="field">
+          <label>项目 ID <span style="color:var(--red)">*</span></label>
+          <input type="text" id="np-id" placeholder="例如 proj_001(建议英文+数字)" required>
+          <div class="hint">用于文件名,已有项目的 ID 不能重复</div>
+        </div>
+        <div class="field">
+          <label>项目名称 <span style="color:var(--red)">*</span></label>
+          <input type="text" id="np-name" maxlength="40" placeholder="例如:官网重构" required>
+        </div>
+        <div class="field">
+          <label>基本功能描述</label>
+          <textarea id="np-desc" maxlength="2000" placeholder="用户想要实现的功能(可不填)"></textarea>
+        </div>
+        <div class="field">
+          <label>初始状态</label>
+          <select id="np-status">
+            <option value="waiting_develop">待开发</option>
+            <option value="developing">开发中</option>
+            <option value="pending_review">待客服确认</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>客服备注(初始)</label>
+          <textarea id="np-remark" maxlength="1000" placeholder="排期、报价等备注信息"></textarea>
+        </div>
+        <div class="modal-progress" id="np-progress"></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-sm btn-sm-ghost" onclick="closeModal('modal-new-project')">取消</button>
+        <button type="submit" class="btn-sm btn-sm-blue" id="np-submit">创建项目</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 确认弹窗 -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="confirm-box">
+    <div class="icon" id="cf-icon">⚠️</div>
+    <h3 id="cf-title">确认操作?</h3>
+    <p id="cf-desc"></p>
+    <div class="btns">
+      <button class="btn-sm btn-sm-ghost" onclick="closeModal('modal-confirm')">取消</button>
+      <button class="btn-sm btn-sm-red" id="cf-btn" onclick="confirmAction()">确认</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="github-api.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
