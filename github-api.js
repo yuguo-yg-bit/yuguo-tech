@@ -38,10 +38,11 @@
     return new TextDecoder().decode(plain);
   }
 
-  /* GitHub Contents/Issues API 封装(原样返回 fetch Response,便于上层判断 ok) */
+  /* GitHub API 封装(原样返回 Response,网络错误抛 TypeError) */
   async function _gh(token, method, url, body){
     var opts = {
       method: method,
+      mode: 'cors',
       headers: {
         'Authorization': 'Bearer ' + token,
         'Accept': 'application/vnd.github+json',
@@ -52,7 +53,12 @@
       opts.headers['Content-Type'] = 'application/json';
       opts.body = JSON.stringify(body);
     }
-    return fetch('https://api.github.com' + url, opts);
+    console.log('[YG] fetch →', method, 'https://api.github.com' + url);
+    var res = await fetch('https://api.github.com' + url, opts).catch(function(e){
+      console.error('[YG] fetch 失败:', e);
+      throw new Error('网络错误: ' + e.message + ' — 可能是 CORS 阻止或网络问题');
+    });
+    return res;
   }
 
   /* 读 JSON:返回对象(失败抛错) */
@@ -91,16 +97,30 @@
     return ghJSON(token, 'PUT', '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path, body);
   }
 
-  /* 读目录下所有 JSON 文件 */
+  /* 读目录列表 */
   async function ghListDir(token, dirPath){
-    var res = await _gh(token, 'GET', '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + dirPath);
+    var url = '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + dirPath;
+    console.log('[YG] ghListDir URL:', 'https://api.github.com' + url);
+    console.log('[YG] Token prefix:', token ? token.slice(0,4) : 'MISSING');
+    var res = await _gh(token, 'GET', url);
+    console.log('[YG] ghListDir status:', res.status, res.statusText);
     if(!res.ok){
-      if(res.status === 404) return [];
-      throw new Error('API ' + res.status + ' GET dir ' + dirPath);
+      /* 读出错误体 */
+      var errText = await res.text().catch(function(){ return ''; });
+      console.error('[YG] ghListDir error body:', errText.slice(0,300));
+      throw new Error('API ' + res.status + ' ' + res.statusText + ' — ' + errText.slice(0,100));
     }
     var list = await res.json();
-    if(!Array.isArray(list)) return [];
-    return list.filter(function(f){ return f.type === 'file'; });
+    console.log('[YG] ghListDir result type:', typeof list, Array.isArray(list) ? 'array, length='+list.length : 'object keys=' + Object.keys(list||{}).join(','));
+    if(!Array.isArray(list)){
+      /* GitHub 对空目录返回 {},对非空返回数组 */
+      if(list && typeof list === 'object' && Object.keys(list).length === 0){
+        console.log('[YG] 空目录(返回 {}),当作空数组');
+        return [];
+      }
+      throw new Error('API 异常:期望数组,收到 ' + typeof list);
+    }
+    return list.filter(function(f){ return f.type === 'dir' || f.type === 'file'; });
   }
 
   /* 读取目录下全部 JSON 文件并解析为对象数组 */
