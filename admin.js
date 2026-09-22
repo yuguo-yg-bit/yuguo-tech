@@ -8,14 +8,10 @@
   'use strict';
 
   /* ===== 管理员密码(AES-256-GCM 加密,运行时解密) ===== */
-  /* IV */
   var _kv = "EgajaMIrPJPtNBd0";
-  /* 密文片段(拼接后 = ciphertext+tag) */
-  var _k1 = "6m3uhaCrXXUg284MbXMp";
-  var _k2 = "vN+DDp6aEFo9xPgj";
-  /* tag */
+  /* 密文(ciphertext+tag,单段 base64) */
+  var _kc = "6m3uhaCrXXUg284MbXMpvN+DDp6aEFo9xPgj";
   var _kt = "DG1zKbzfgw6emhBaPcT4Iw==";
-  /* 口令(与 github-api.js 用同一个) */
   var _kp = "yuguo-site-2026-secret-key";
 
   /* base64 → Uint8Array */
@@ -32,12 +28,10 @@
     var keyMaterial = await crypto.subtle.digest('SHA-256', enc.encode(_kp));
     var key = await crypto.subtle.importKey('raw', keyMaterial, {name:'AES-GCM'}, false, ['decrypt']);
     var iv = _b64ToBuf(_kv);
-    var ciphertext = _b64ToBuf(_k1 + _k2);
+    var combined = _b64ToBuf(_kc); // combined = ciphertext(11) + tag(16) = 27 bytes
     var tag = _b64ToBuf(_kt);
-    var combined = new Uint8Array(ciphertext.length + tag.length);
-    combined.set(ciphertext, 0);
-    combined.set(tag, ciphertext.length);
-    var plain = await crypto.subtle.decrypt({name:'AES-GCM', iv: iv}, key, combined);
+    var ciphertext = combined.slice(0, combined.length - tag.length);
+    var plain = await crypto.subtle.decrypt({name:'AES-GCM', iv: iv}, key, ciphertext);
     return new TextDecoder().decode(plain);
   }
 
