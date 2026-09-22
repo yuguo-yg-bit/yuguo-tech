@@ -474,6 +474,28 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- 隐藏诊断按钮(左上角) -->
+<button onclick="
+  (async function(){
+    var el = document.getElementById('diag-result') || (function(){
+      var d = document.createElement('div');
+      d.id = 'diag-result';
+      d.style.cssText = 'position:fixed;top:10px;left:10px;z-index:999;background:rgba(5,10,24,.95);border:1px solid #4D8DFF;border-radius:10px;padding:14px 16px;font-family:monospace;font-size:13px;color:#E8EEFF;max-width:500px;max-height:80vh;overflow-y:auto;line-height:1.7';
+      document.body.appendChild(d); return d;
+    })();
+    el.style.display = 'block';
+    el.innerHTML = '<b style=color:#35D6F5>诊断中…</b>';
+    try {
+      var token = await YG.getToken();
+      el.innerHTML = '<b style=color:#34D399>✅ 解密成功</b><br>token: ' + token.slice(0,8) + '...<br><br>';
+      var dirs = await YG.ghListDir(token, 'users');
+      el.innerHTML += '<b style=color:#35D6F5>✅ users 目录(' + dirs.length + '个):</b><br>' + dirs.map(function(d){ return '📁 ' + d.name + ' (type:' + d.type + ')'; }).join('<br>');
+    } catch(e) {
+      el.innerHTML = '<b style=color:#FF6B6B>❌ 错误:</b><br>' + e.message;
+    }
+  })()
+" style="position:fixed;bottom:8px;left:8px;z-index:999;background:#0B1530;border:1px solid #16244A;color:#8FA3D8;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:monospace">[调试]</button>
+
 <script src="github-api.js"></script>
 <script src="admin.js"></script>
 </body>

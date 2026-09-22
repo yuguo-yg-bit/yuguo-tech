@@ -54,8 +54,16 @@
   const loginMsg   = document.getElementById('login-msg');
 
   async function initAdmin(){
-    ADMIN_PWD = await _getAdminPwd();
-    SESSION_VAL = 'admin_ok_' + ADMIN_PWD.slice(-6);
+    try {
+      ADMIN_PWD = await _getAdminPwd();
+      SESSION_VAL = 'admin_ok_' + ADMIN_PWD.slice(-6);
+      console.log('[Admin] 密码解密成功:', ADMIN_PWD.slice(0,4) + '***');
+    } catch(e) {
+      console.error('[Admin] 密码解密失败:', e);
+      document.getElementById('login-msg').textContent = '初始化失败: ' + e.message;
+      document.getElementById('login-msg').className = 'msg err';
+      return;
+    }
     checkSession();
   }
 
