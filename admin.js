@@ -102,7 +102,10 @@
     loginPage.style.display = 'none';
     adminPage.classList.add('show');
     initNav();
-    loadAll();
+    /* 容错:loadAll 失败也允许进入后台 */
+    loadAll().catch(function(e){
+      console.error('[Admin] loadAll 失败但允许进入:', e);
+    });
     startPoll();
   }
 

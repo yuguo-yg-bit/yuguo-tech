@@ -480,25 +480,33 @@
     var el = document.getElementById('diag-result') || (function(){
       var d = document.createElement('div');
       d.id = 'diag-result';
-      d.style.cssText = 'position:fixed;top:10px;left:10px;z-index:999;background:rgba(5,10,24,.95);border:1px solid #4D8DFF;border-radius:10px;padding:14px 16px;font-family:monospace;font-size:13px;color:#E8EEFF;max-width:600px;max-height:80vh;overflow-y:auto;line-height:1.7;white-space:pre-wrap';
+      d.style.cssText = 'position:fixed;top:10px;left:10px;z-index:9999;background:rgba(5,10,24,.97);border:1px solid #4D8DFF;border-radius:10px;padding:16px 18px;font-family:monospace;font-size:13px;color:#E8EEFF;max-width:680px;max-height:80vh;overflow-y:auto;line-height:1.8;white-space:pre-wrap;box-shadow:0 8px 32px rgba(0,0,0,.6)';
       document.body.appendChild(d); return d;
     })();
     el.style.display = 'block';
-    el.innerHTML = '🔄 诊断中…';
+    el.innerHTML = '🔄 诊断中…\n请等待…';
     try {
       var token = await YG.getToken();
-      el.innerHTML = '✅ token解密成功: ' + token.slice(0,12) + '…\n\n';
-      el.innerHTML += '🔄 正在请求 users 目录…\n';
+      el.innerHTML = '✅ 1. token解密成功: ' + token.slice(0,12) + '…\n\n';
+      el.innerHTML += '🔄 2. 请求 users 目录…\n';
       var dirs = await YG.ghListDir(token, 'users');
-      el.innerHTML += '✅ users 目录: ' + dirs.length + ' 个\n';
-      dirs.forEach(function(d){ el.innerHTML += '  📁 ' + d.name + ' (type=' + d.type + ')\n'; });
-      if(dirs.length === 0) el.innerHTML += '\n⚠️ 目录为空!请检查:\n1. 仓库 yuguo-coding 是否存在且 token 有权限\n2. 仓库里是否有 users/ 目录\n3. Console 里看 network 面板请求状态码';
+      el.innerHTML += '✅ 3. users 目录: ' + dirs.length + ' 个\n';
+      dirs.forEach(function(d){ el.innerHTML += '    📁 ' + d.name + '\n'; });
+      if(dirs.length === 0) {
+        el.innerHTML += '\n⚠️ 目录为空!请按 F12 → Network → 找 api.github.com 请求,看状态码:\n';
+        el.innerHTML += '  - 200 = 有权限但目录真为空\n';
+        el.innerHTML += '  - 403 = token 没 repo 权限\n';
+        el.innerHTML += '  - 404 = 仓库不存在或路径错误\n';
+        el.innerHTML += '  - network error = CORS 被阻止\n';
+      } else {
+        el.innerHTML += '\n✅ 一切正常!请重新进入管理后台';
+      }
     } catch(e) {
-      el.innerHTML = '❌ 错误:\n' + (e.message || String(e)) + '\n\n🔍 检查 Console Network 面板:\n- 请求 api.github.com 的状态码是什么?\n- 是否有 CORS 报错?';
+      el.innerHTML = '❌ 错误:\n' + (e.message || String(e)) + '\n\n按 F12 → Console 里有详细日志';
       console.error(e);
     }
   })()
-" style="position:fixed;bottom:8px;left:8px;z-index:999;background:#0B1530;border:1px solid #16244A;color:#8FA3D8;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:monospace">[调试]</button>
+" style="position:fixed;bottom:8px;left:8px;z-index:9999;background:#0B1530;border:1px solid #16244A;color:#8FA3D8;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:monospace">[调试]</button>
 
 <script src="github-api.js"></script>
 <script src="admin.js"></script>
